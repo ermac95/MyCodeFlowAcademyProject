@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">MyCodeFlowAcademyProject</string>
+    <string name="details_page_text">13+</string>
+    <string name="details_avengers_title">Avengers:\nEnd Game</string>
+    <string name="details_category_title">Action, Adventure, Fantasy</string>
+    <string name="details_storyline">Storyline</string>
+    <string name="storyline_body_text">After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe.</string>
+    <string name="detail_cast">Cast</string>
+    <string name="robert_downey_jr">Robert Downey Jr.</string>
+    <string name="chris_evans">Chris\nEvans</string>
+    <string name="mark_ruffalo">Mark\nRuffalo</string>
+    <string name="chris_hemsworth">Chris Hemsworth</string>
 </resources>

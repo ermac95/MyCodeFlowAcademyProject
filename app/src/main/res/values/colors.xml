@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="details_bg_color">#191926</color>
+    <color name="top_section_text_color">#6D6D80</color>
+    <color name="pagi_bg_color">#95191926</color>
+    <color name="details_title_color">#ECECEC</color>
+    <color name="details_category_tags">#FF3466</color>
+    <color name="description_text">#FFFFFF</color>
+    <color name="cast_titles">#D8D8D8</color>
 </resources>
