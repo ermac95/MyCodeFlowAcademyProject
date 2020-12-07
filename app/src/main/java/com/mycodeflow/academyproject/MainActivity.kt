@@ -2,9 +2,8 @@ package com.mycodeflow.academyproject
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 
-class MainActivity : AppCompatActivity(), FragmentMoviesList.DetailsListener, FragmentMoviesDetails.BackToMenuListener  {
+class MainActivity : AppCompatActivity(), FragmentMoviesDetails.BackToMenuListener, FragmentMoviesList.MovieDetailsListener {
 
     private val listFragment = FragmentMoviesList()
     private var detailsFragment = FragmentMoviesDetails()
@@ -20,7 +19,8 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.DetailsListener, Fr
         }
     }
 
-    override fun showDetails() {
+    override fun showDetails(movieId: Int) {
+        val detailsFragment = FragmentMoviesDetails.newInstance(movieId)
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_frame_container, detailsFragment)
                 .addToBackStack(detailsFragment.toString())
@@ -30,4 +30,5 @@ class MainActivity : AppCompatActivity(), FragmentMoviesList.DetailsListener, Fr
     override fun backToMainMenu() {
         supportFragmentManager.popBackStack()
     }
+
 }

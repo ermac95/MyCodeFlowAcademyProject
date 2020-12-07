@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/details_bg_color">
@@ -37,14 +38,18 @@
             android:layout_marginStart="16dp"
             android:contentDescription="@string/imageDescription" />
 
-        <include
-            android:layout_height="wrap_content"
-            android:layout_width="170dp"
-            layout="@layout/movie_list_item_card"
-            app:layout_constraintTop_toBottomOf="@id/movies_list_top_title"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginTop="18dp"
-            android:layout_marginStart="12dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_main_movie_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@id/movies_list_top_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="25dp"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:spanCount="2"
+                    tools:listitem="@layout/view_holder_movie"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

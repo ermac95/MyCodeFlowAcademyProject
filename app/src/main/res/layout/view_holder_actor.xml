@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/actor_item_parent"
+    android:layout_width="80dp"
+    android:layout_height="wrap_content"
+    android:background="@color/details_bg_color">
+
+    <ImageView
+        android:id="@+id/actor_photo"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@drawable/cast_bg_round_shape"
+        android:scaleType="fitXY"
+        tools:src="@drawable/tenat_first_actor"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/actor_name"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        tools:text="@string/robert_downey_jr"
+        android:textColor="@color/cast_titles"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:gravity="left"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toBottomOf="@id/actor_photo"
+        app:layout_constraintStart_toStartOf="@id/actor_photo"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
