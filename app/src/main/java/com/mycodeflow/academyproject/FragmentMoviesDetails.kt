@@ -82,11 +82,12 @@ class FragmentMoviesDetails : Fragment() {
         }
         //setting recycler and its attributes
         val actors = ActorDataSource().getActorsCastById(movieId)
-        castListAdapter = DetailCastListAdapter(requireContext(), actors)
+        castListAdapter = DetailCastListAdapter(actors)
         rvCastList = view.findViewById<RecyclerView>(R.id.rv_details_cast).apply {
             adapter = castListAdapter
             addItemDecoration(ActorListItemDecorator(requireContext(), 16))
         }
+
         return view
     }
 
