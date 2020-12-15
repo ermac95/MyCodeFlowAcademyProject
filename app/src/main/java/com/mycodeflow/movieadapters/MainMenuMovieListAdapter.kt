@@ -1,6 +1,5 @@
 package com.mycodeflow.movieadapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,28 +11,22 @@ import com.mycodeflow.academyproject.R
 import com.mycodeflow.datamodel.Movie
 
 class MainMenuMovieListAdapter(
-    context: Context,
     private val movies: List<Movie>,
     private val clickListener: FragmentMoviesList.MovieDetailsListener?
 ): RecyclerView.Adapter<MovieViewHolder>() {
 
-    private val inflater: LayoutInflater = LayoutInflater.from(context)
-
-    private fun getItem(position: Int): Movie = movies[position]
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        return MovieViewHolder(inflater.inflate(R.layout.view_holder_movie, parent, false))
+        return MovieViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_holder_movie, parent, false))
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.onBind(getItem(position))
+        holder.onBind(movies[position])
         holder.itemView.setOnClickListener{
-            clickListener?.showDetails(getItem(position).id)
+            clickListener?.showDetails(movies[position].id)
         }
     }
 
     override fun getItemCount(): Int = movies.size
-
 }
 
 class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -59,13 +52,22 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         else
             favorite.setImageResource(R.drawable.movie_favorite_indicator_off)
         tags.text = movie.tags
-        rtFirstStar.setImageResource(if(movie.rating>=1)R.drawable.star_icon_on else R.drawable.star_icon_off)
-        rtSecondStar.setImageResource(if(movie.rating>=2)R.drawable.star_icon_on else R.drawable.star_icon_off)
-        rtThirdStar.setImageResource(if(movie.rating>=3)R.drawable.star_icon_on else R.drawable.star_icon_off)
-        rtFourthStar.setImageResource(if(movie.rating>=4)R.drawable.star_icon_on else R.drawable.star_icon_off)
-        rtFifthStar.setImageResource(if(movie.rating==5)R.drawable.star_icon_on else R.drawable.star_icon_off)
+        //setting star icons
+        val stars: List<ImageView> = listOf(rtFirstStar, rtSecondStar, rtThirdStar, rtFourthStar, rtFifthStar)
+        setStarIcons(stars, movie)
         reviewText.text = movie.reviewText
         mainTitle.text = movie.mainTitle
         durationTime.text = movie.durationTime
+    }
+
+    private fun setStarIcons(stars: List<ImageView>, movie: Movie){
+        for (index in stars.indices){
+            if (index <= movie.rating - 1){
+                stars[index].setImageResource(R.drawable.star_icon_on)
+            }
+            else {
+                stars[index].setImageResource(R.drawable.star_icon_off)
+            }
+        }
     }
 }
