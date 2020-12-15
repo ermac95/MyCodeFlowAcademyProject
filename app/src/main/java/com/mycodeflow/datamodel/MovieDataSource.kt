@@ -1,7 +1,6 @@
 package com.mycodeflow.datamodel
 
 import com.mycodeflow.academyproject.R
-import java.lang.Exception
 
 class MovieDataSource {
     fun getMovies(): List<Movie>{
@@ -61,13 +60,7 @@ class MovieDataSource {
         )
     }
 
-    fun getMovieById(movieId: Int): Movie{
-        return when(movieId){
-            1 -> getMovies()[0]
-            2 -> getMovies()[1]
-            3 -> getMovies()[2]
-            4 -> getMovies()[3]
-                else -> throw Exception()
-        }
+    fun getMovieById(movieId: Int): Movie?{
+        return getMovies().find { it.id == movieId }
     }
 }
