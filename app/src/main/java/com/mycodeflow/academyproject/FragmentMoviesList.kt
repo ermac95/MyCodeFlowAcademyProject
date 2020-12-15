@@ -29,7 +29,7 @@ class FragmentMoviesList : Fragment() {
         val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
         val rvMovieList = view.findViewById<RecyclerView>(R.id.rv_main_movie_list)
         val movies = MovieDataSource().getMovies()
-        val movieListAdapter = MainMenuMovieListAdapter(requireContext(), movies, clickListener)
+        val movieListAdapter = MainMenuMovieListAdapter(movies, clickListener)
         rvMovieList.adapter = movieListAdapter
         rvMovieList.addItemDecoration(MovieListItemDecorator(requireContext(),12, 11, 12))
         return view
@@ -42,5 +42,11 @@ class FragmentMoviesList : Fragment() {
 
     interface MovieDetailsListener{
         fun showDetails(movieId: Int)
+    }
+
+    companion object {
+        fun newInstance(): FragmentMoviesList {
+            return FragmentMoviesList()
+        }
     }
 }
