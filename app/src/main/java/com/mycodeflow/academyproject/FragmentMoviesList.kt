@@ -6,16 +6,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
+import com.mycodeflow.MovieListItemDecorator
+import com.mycodeflow.datamodel.MovieDataSource
+import com.mycodeflow.movieadapters.MainMenuMovieListAdapter
 
 class FragmentMoviesList : Fragment() {
 
-    private var listener : DetailsListener? = null
+    private var clickListener: MovieDetailsListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is DetailsListener){
-            listener = context
+        if (context is MovieDetailsListener){
+            clickListener = context
         }
     }
 
@@ -24,20 +27,26 @@ class FragmentMoviesList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
-        view.findViewById<ConstraintLayout>(R.id.movie_item_parent)?.apply{
-            setOnClickListener{
-                listener?.showDetails()
-            }
-        }
+        val rvMovieList = view.findViewById<RecyclerView>(R.id.rv_main_movie_list)
+        val movies = MovieDataSource().getMovies()
+        val movieListAdapter = MainMenuMovieListAdapter(movies, clickListener)
+        rvMovieList.adapter = movieListAdapter
+        rvMovieList.addItemDecoration(MovieListItemDecorator(requireContext(),12, 11, 12))
         return view
     }
 
     override fun onDetach() {
         super.onDetach()
-        listener = null
+        clickListener = null
     }
 
-    interface DetailsListener{
-        fun showDetails()
+    interface MovieDetailsListener{
+        fun showDetails(movieId: Int)
+    }
+
+    companion object {
+        fun newInstance(): FragmentMoviesList {
+            return FragmentMoviesList()
+        }
     }
 }
