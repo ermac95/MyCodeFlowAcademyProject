@@ -35,7 +35,7 @@ class FragmentMoviesDetails : Fragment() {
                               savedInstanceState: Bundle?): View? {
         //getting arguments
         movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
-        movie = movieId?.let { MovieDataSource().getMovieById(it) }
+        movie = MovieDataSource().getMovieById(movieId!!)
         //inflating main view
         val view = inflater.inflate(R.layout.fragment_movies_details, container, false)
         //setting clickListener on backButton
