@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mycodeflow.ActorListItemDecorator
-import com.mycodeflow.MovieListItemDecorator
 import com.mycodeflow.datamodel.ActorDataSource
 import com.mycodeflow.datamodel.Movie
 import com.mycodeflow.datamodel.MovieDataSource
@@ -22,6 +21,8 @@ class FragmentMoviesDetails : Fragment() {
    private var listener: BackToMenuListener? = null
     private var movieId: Int? = null
     private var movie: Movie? = null
+    private var rvCastList: RecyclerView? = null
+    private var castListAdapter: DetailCastListAdapter? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -30,23 +31,15 @@ class FragmentMoviesDetails : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        movieId = arguments?.getInt(KEY_MOVIE_ID)
-        movie = movieId?.let { MovieDataSource().getMovieById(it) }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        //getting arguments
+        movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
+        movie = movieId?.let { MovieDataSource().getMovieById(it) }
         //inflating main view
         val view = inflater.inflate(R.layout.fragment_movies_details, container, false)
         //setting clickListener on backButton
-        view.findViewById<ImageView>(R.id.movie_details_back_button)
-            ?.apply {
-                setOnClickListener{
-                    listener?.backToMainMenu()
-                }
-            }
+        view?.findViewById<ImageView>(R.id.movie_details_back_button)?.setOnClickListener{listener?.backToMainMenu()}
         //movie main bg
         view.findViewById<ImageView>(R.id.movie_details_bg).apply {
             movie?.detailsBg?.let { setImageResource(it) }
@@ -87,17 +80,21 @@ class FragmentMoviesDetails : Fragment() {
         view.findViewById<TextView>(R.id.movie_details_storyline_text).apply {
             text = movie?.detailDescription
         }
-        val rvCastList = view.findViewById<RecyclerView>(R.id.rv_details_cast)
+        //setting recycler and its attributes
         val actors = ActorDataSource().getActorsCastById(movieId)
-        val castListAdapter = DetailCastListAdapter(requireContext(), actors)
-        rvCastList.adapter = castListAdapter
-        rvCastList.addItemDecoration(ActorListItemDecorator(requireContext(), 16))
+        castListAdapter = DetailCastListAdapter(requireContext(), actors)
+        rvCastList = view.findViewById<RecyclerView>(R.id.rv_details_cast).apply {
+            adapter = castListAdapter
+            addItemDecoration(ActorListItemDecorator(requireContext(), 16))
+        }
         return view
     }
 
     override fun onDetach() {
         super.onDetach()
         listener = null
+        castListAdapter = null
+        rvCastList = null
     }
 
     interface BackToMenuListener{
