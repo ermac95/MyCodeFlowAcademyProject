@@ -14,7 +14,7 @@
         android:layout_height="80dp"
         android:background="@drawable/cast_bg_round_shape"
         android:scaleType="fitXY"
-        tools:src="@drawable/tenat_first_actor"
+        tools:src="@drawable/avengers_robert_djr"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -23,7 +23,7 @@
         android:id="@+id/actor_name"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        tools:text="@string/robert_downey_jr"
+        tools:text="Robert Downey Jr"
         android:textColor="@color/cast_titles"
         android:textSize="12sp"
         android:textStyle="bold"

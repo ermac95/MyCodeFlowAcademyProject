@@ -1,21 +1,10 @@
 <resources>
     <string name="app_name">MyCodeFlowAcademyProject</string>
-    <string name="details_page_text">13+</string>
-    <string name="details_avengers_title">Avengers:\nEnd Game</string>
-    <string name="details_category_title">Action, Adventure, Fantasy</string>
-    <string name="details_storyline">Storyline</string>
-    <string name="storyline_body_avengers">After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe.</string>
-    <string name="storyline_body_tenat">"An unnamed CIA agent, the "Protagonist", participates in an undercover operation at a Kyiv opera house. He is aided by a masked soldier with a distinctive trinket, who appears to "un-fire" a bullet through a hostile gunman. After seizing a strange artifact, the Protagonist is captured by mercenaries. He endures torture before consuming a cyanide pill. He awakens to learn the pill was a test of his loyalty; his team has been killed and the artifact lost."</string>
-    <string name="detail_cast">Cast</string>
-    <string name="robert_downey_jr">Robert Downey Jr.</string>
-    <string name="chris_evans">Chris\nEvans</string>
-    <string name="mark_ruffalo">Mark\nRuffalo</string>
-    <string name="chris_hemsworth">Chris Hemsworth</string>
+    <string name="movie_review_text">%1$d REVIEWS</string>
+    <string name="movie_duration_text">%1$d MIN</string>
+    <string name="movie_minimum_age">%1$d+</string>
     <string name="movies_list_top_title">Movies list</string>
-    <string name="movie_list_avengers_tags">Action, Adventure, Drama</string>
-    <string name="movie_avengers_item_title">Avengers: End Game</string>
-    <string name="movie_avengers_item_time">137 min</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="imageDescription">shotImage</string>
-    <string name="restriction_13">13+</string>
+    <string name="movie_details_storyline">Storyline</string>
+    <string name="movie_details_cast">Cast</string>
 </resources>

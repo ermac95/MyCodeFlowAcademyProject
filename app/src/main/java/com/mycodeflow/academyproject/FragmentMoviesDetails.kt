@@ -2,92 +2,62 @@ package com.mycodeflow.academyproject
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mycodeflow.ActorListItemDecorator
-import com.mycodeflow.datamodel.ActorDataSource
-import com.mycodeflow.datamodel.Movie
-import com.mycodeflow.datamodel.MovieDataSource
-import com.mycodeflow.movieadapters.DetailCastListAdapter
+import com.mycodeflow.data.Movie
+import com.mycodeflow.datasource.MoviesDataSource
+import com.mycodeflow.moviesadapters.DetailCastListAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
-class FragmentMoviesDetails : Fragment() {
+class FragmentMoviesDetails : BaseFragment() {
 
-   private var listener: BackToMenuListener? = null
-    private var movieId: Int? = null
-    private var movie: Movie? = null
-    private var rvCastList: RecyclerView? = null
+    private lateinit var backButton: ImageView
+    private lateinit var backDrop: ImageView
+    private lateinit var minimumAge: TextView
+    private lateinit var title: TextView
+    private lateinit var genresTags: TextView
+    private lateinit var firstStar: ImageView
+    private lateinit var secondStar: ImageView
+    private lateinit var thirdStar: ImageView
+    private lateinit var fourthStar: ImageView
+    private lateinit var fifthStar: ImageView
+    private lateinit var numberOfReviews: TextView
+    private lateinit var storyLineTitle: TextView
+    private lateinit var storyLine: TextView
+    private lateinit var castTitle: TextView
+    private lateinit var rvCastList: RecyclerView
     private var castListAdapter: DetailCastListAdapter? = null
+    private var listener: BackToMenuListener? = null
+    private var dataSource: MoviesDataSource? = null
+    private var scope = CoroutineScope(Dispatchers.IO)
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is BackToMenuListener){
             listener = context
         }
+        dataSource = dataProvider?.dataSource()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        //getting arguments
-        movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
-        movie = MovieDataSource().getMovieById(movieId!!)
-        //inflating main view
+        //inflating main view and setup views
         val view = inflater.inflate(R.layout.fragment_movies_details, container, false)
-        //setting clickListener on backButton
-        view?.findViewById<ImageView>(R.id.movie_details_back_button)?.setOnClickListener{listener?.backToMainMenu()}
-        //movie main bg
-        view.findViewById<ImageView>(R.id.movie_details_bg).apply {
-            movie?.detailsBg?.let { setImageResource(it) }
-        }
-        //movie age restriction
-        view.findViewById<TextView>(R.id.movie_details_age_text).apply{
-            text = movie?.restrictionText
-        }
-        //movie main title
-        view.findViewById<TextView>(R.id.movie_details_title).apply {
-            text = movie?.mainTitle
-        }
-        //movie tags
-        view.findViewById<TextView>(R.id.movie_details_tags).apply{
-            text = movie?.tags
-        }
-        //movie rating
-        view.findViewById<ImageView>(R.id.details_first_star).apply {
-            setImageResource(if(movie?.rating!!>=1)R.drawable.star_icon_on else R.drawable.star_icon_off)
-        }
-        view.findViewById<ImageView>(R.id.details_second_star).apply {
-            setImageResource(if(movie?.rating!!>=2)R.drawable.star_icon_on else R.drawable.star_icon_off)
-        }
-        view.findViewById<ImageView>(R.id.details_third_star).apply {
-            setImageResource(if(movie?.rating!!>=3)R.drawable.star_icon_on else R.drawable.star_icon_off)
-        }
-        view.findViewById<ImageView>(R.id.details_fourth_star).apply {
-            setImageResource(if(movie?.rating!!>=4)R.drawable.star_icon_on else R.drawable.star_icon_off)
-        }
-        view.findViewById<ImageView>(R.id.details_fifth_star).apply {
-            setImageResource(if(movie?.rating!!>=5)R.drawable.star_icon_on else R.drawable.star_icon_off)
-        }
-        //movie number of reviews
-        view.findViewById<TextView>(R.id.details_review_text).apply {
-            text = movie?.reviewText
-        }
-        //movie storyline text
-        view.findViewById<TextView>(R.id.movie_details_storyline_text).apply {
-            text = movie?.detailDescription
-        }
-        //setting recycler and its attributes
-        val actors = ActorDataSource().getActorsCastById(movieId)
-        castListAdapter = DetailCastListAdapter(actors)
-        rvCastList = view.findViewById<RecyclerView>(R.id.rv_details_cast).apply {
-            adapter = castListAdapter
-            addItemDecoration(ActorListItemDecorator(requireContext(), 16))
-        }
-
+        setupViews(view)
+        //getting movie by id
+        val movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
+        getMovieById(movieId)
         return view
     }
 
@@ -95,7 +65,79 @@ class FragmentMoviesDetails : Fragment() {
         super.onDetach()
         listener = null
         castListAdapter = null
-        rvCastList = null
+    }
+
+    private fun setupViews(view: View){
+        backButton = view.findViewById<ImageView>(R.id.movie_details_back_button).apply {
+            setOnClickListener{listener?.backToMainMenu()}
+        }
+        backDrop = view.findViewById(R.id.movie_details_bg)
+        minimumAge = view.findViewById(R.id.movie_details_age_text)
+        title = view.findViewById(R.id.movie_details_title)
+        genresTags = view.findViewById(R.id.movie_details_tags)
+        firstStar = view.findViewById(R.id.details_first_star)
+        secondStar = view.findViewById(R.id.details_second_star)
+        thirdStar = view.findViewById(R.id.details_third_star)
+        fourthStar = view.findViewById(R.id.details_fourth_star)
+        fifthStar = view.findViewById(R.id.details_fifth_star)
+        numberOfReviews = view.findViewById(R.id.details_review_text)
+        storyLine = view.findViewById(R.id.movie_details_storyline_text)
+        storyLineTitle = view.findViewById(R.id.storyline_title)
+        castTitle = view.findViewById(R.id.cast_title)
+        rvCastList = view.findViewById(R.id.rv_details_cast)
+    }
+
+    private fun getMovieById(movieId: Int) {
+        //Dispatchers IO
+        scope.launch {
+            val movie = dataSource?.getMovieByIdAsync(movieId)
+            bindViews(movie)
+        }
+    }
+
+    private suspend fun bindViews(movie: Movie?) = withContext(Dispatchers.Main){
+        //set background image
+        Glide.with(context!!)
+            .load(movie?.backdrop)
+            .placeholder(R.drawable.movie_details_bg_avengers)
+            .into(backDrop)
+        //age restriction
+        val ageText = context!!.getString(R.string.movie_minimum_age, movie?.minimumAge)
+        minimumAge.text = ageText
+        //title
+        title.text = movie?.title
+        //genre tags
+        val genreTags: String? = movie?.genres?.joinToString(separator = ", ") { it.name }
+        genresTags.text = genreTags
+        //star icons
+        val starsList: List<ImageView> = listOf(firstStar, secondStar, thirdStar, fourthStar, fifthStar)
+        setStarIcons(starsList, movie)
+        //number of reviews
+        val reviews = context!!.getString(R.string.movie_review_text, movie?.numberOfRatings)
+        numberOfReviews.text = reviews
+        //storyline
+        storyLineTitle.text = getString(R.string.movie_details_storyline)
+        storyLine.text = movie?.overview
+        //actor cast
+        if (movie?.actors?.isNotEmpty() == true){
+            castTitle.text = getString(R.string.movie_details_cast)
+            castListAdapter = DetailCastListAdapter(movie.actors)
+            rvCastList.apply {
+                adapter = castListAdapter
+                addItemDecoration(ActorListItemDecorator(requireContext(), 16))
+            }
+        }
+    }
+
+    private fun setStarIcons(stars: List<ImageView>, movie: Movie?) {
+        for (index in stars.indices){
+            if (index <= (movie!!.ratings/2) - 0.5){
+                stars[index].setImageResource(R.drawable.star_icon_on)
+            }
+            else {
+                stars[index].setImageResource(R.drawable.star_icon_off)
+            }
+        }
     }
 
     interface BackToMenuListener{

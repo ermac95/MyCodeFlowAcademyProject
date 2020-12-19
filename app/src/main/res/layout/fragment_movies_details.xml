@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
-            android:text="@string/details_page_text"
+            tools:text="13+"
             android:textColor="@color/white"
             android:textSize="12sp"
             android:gravity="center"
@@ -85,7 +85,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:padding="0dp"
-            android:text="@string/details_avengers_title"
+            tools:text="Avengers: End of game"
             android:textColor="@color/details_title_color"
             android:textSize="40sp"
             android:textStyle="bold"
@@ -99,7 +99,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/details_category_title"
+            tools:text="Action, Adventure, Fiction"
             android:textColor="@color/details_category_tags"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -176,7 +176,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/details_storyline"
+            tools:text="Storyline"
             android:textColor="@color/details_title_color"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -191,7 +191,7 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="16dp"
             android:gravity="center_vertical"
-            tools:text="@string/storyline_body_avengers"
+            tools:text="After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos\' actions and restore balance to the universe."
             android:textColor="@color/description_text"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -205,7 +205,7 @@
             android:layout_marginTop="24dp"
             android:layout_marginEnd="116dp"
             android:gravity="center_vertical"
-            android:text="@string/detail_cast"
+            tools:text="Cast"
             android:textColor="@color/details_title_color"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -223,7 +223,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="horizontal"
-            tools:listitem=""/>
+            tools:listitem="@layout/view_holder_actor"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
