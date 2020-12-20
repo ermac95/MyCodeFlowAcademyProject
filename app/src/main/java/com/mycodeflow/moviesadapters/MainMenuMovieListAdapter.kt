@@ -1,6 +1,5 @@
 package com.mycodeflow.moviesadapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,23 +12,27 @@ import com.mycodeflow.academyproject.R
 import com.mycodeflow.data.Movie
 
 class MainMenuMovieListAdapter(
-    private val movies: List<Movie>,
+    private var movies: List<Movie>?,
     private val clickListener: FragmentMoviesList.MovieDetailsListener?
 ): RecyclerView.Adapter<MovieViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
-        Log.d("myLogs", "movies = ${movies.size}")
         return MovieViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_holder_movie, parent, false))
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.onBind(movies[position])
+        holder.onBind(movies?.get(position))
         holder.itemView.setOnClickListener{
-            clickListener?.showDetails(movies[position].id)
+            movies?.get(position)?.id?.let { it1 -> clickListener?.showDetails(it1) }
         }
     }
 
-    override fun getItemCount(): Int = movies.size
+    override fun getItemCount(): Int = movies?.size ?: 0
+
+    fun setData(updatedMovies: List<Movie>?){
+        movies = updatedMovies
+        notifyDataSetChanged()
+    }
 }
 
 class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
@@ -47,30 +50,32 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val mainTitle: TextView = itemView.findViewById(R.id.movie_item_title)
     private val durationTime: TextView = itemView.findViewById(R.id.movie_item_duration)
 
-    fun onBind(movie: Movie){
+    fun onBind(movie: Movie?){
         //backdrop image
         Glide.with(itemView.context)
-            .load(movie.poster)
+            .load(movie?.poster)
             .placeholder(R.drawable.movie_list_avengers_bg)
             .into(bgImage)
         //minimum age text
-        val ageText = itemView.context.getString(R.string.movie_minimum_age, movie.minimumAge)
+        val ageText = itemView.context.getString(R.string.movie_minimum_age, movie?.minimumAge)
         minimumAge.text = ageText
         //favorite indicator
         favorite.setImageResource(R.drawable.movie_favorite_indicator_off)
         //genres tags
-        val genreTags: String = movie.genres.joinToString(separator = ", ") { it.name }
+        val genreTags: String? = movie?.genres?.joinToString(separator = ", ") { it.name }
         genres.text = genreTags
         //setting star icons
         val stars: List<ImageView> = listOf(rtFirstStar, rtSecondStar, rtThirdStar, rtFourthStar, rtFifthStar)
-        setStarIcons(stars, movie)
+        if (movie != null) {
+            setStarIcons(stars, movie)
+        }
         //reviews
-        val reviews = itemView.context.getString(R.string.movie_review_text, movie.numberOfRatings)
+        val reviews = itemView.context.getString(R.string.movie_review_text, movie?.numberOfRatings)
         reviewText.text = reviews
         //movie title
-        mainTitle.text = movie.title
+        mainTitle.text = movie?.title
         //movie duration
-        val duration = itemView.context.getString(R.string.movie_duration_text, movie.runtime)
+        val duration = itemView.context.getString(R.string.movie_duration_text, movie?.runtime)
         durationTime.text = duration
     }
 
