@@ -1,4 +1,4 @@
-package com.mycodeflow.movieadapters
+package com.mycodeflow.moviesadapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,8 +6,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.mycodeflow.academyproject.R
-import com.mycodeflow.datamodel.Actor
+import com.mycodeflow.data.Actor
 
 class DetailCastListAdapter(
     private val actors: List<Actor>
@@ -31,7 +32,10 @@ class ActorViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
     private val name: TextView = itemView.findViewById(R.id.actor_name)
 
     fun onBind(actor: Actor){
-        portrait.setImageResource(actor.portrait)
+        Glide.with(itemView.context)
+            .load(actor.picture)
+            .placeholder(R.drawable.avengers_robert_djr)
+            .into(portrait)
         name.text = actor.name
     }
 }
