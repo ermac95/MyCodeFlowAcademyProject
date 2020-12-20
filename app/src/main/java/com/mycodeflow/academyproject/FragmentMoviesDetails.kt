@@ -47,7 +47,6 @@ class FragmentMoviesDetails : BaseFragment() {
         if (context is BackToMenuListener){
             listener = context
         }
-        dataSource = dataProvider?.dataSource()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,10 +54,15 @@ class FragmentMoviesDetails : BaseFragment() {
         //inflating main view and setup views
         val view = inflater.inflate(R.layout.fragment_movies_details, container, false)
         setupViews(view)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dataSource = dataProvider?.dataSource()
         //getting movie by id
         val movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
         getMovieById(movieId)
-        return view
     }
 
     override fun onDetach() {
@@ -97,7 +101,7 @@ class FragmentMoviesDetails : BaseFragment() {
 
     private suspend fun bindViews(movie: Movie?) = withContext(Dispatchers.Main){
         //set background image
-        Glide.with(context!!)
+        Glide.with(requireView())
             .load(movie?.backdrop)
             .placeholder(R.drawable.movie_details_bg_avengers)
             .into(backDrop)
