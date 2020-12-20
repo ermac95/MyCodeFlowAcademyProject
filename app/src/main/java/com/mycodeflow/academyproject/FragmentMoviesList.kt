@@ -2,7 +2,6 @@ package com.mycodeflow.academyproject
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,13 +19,13 @@ class FragmentMoviesList : BaseFragment() {
     private var scope = CoroutineScope(Dispatchers.IO)
     private var movies: List<Movie>? = null
     private var movieListAdapter: MainMenuMovieListAdapter? = null
+    private lateinit var rvMovieList: RecyclerView
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is MovieDetailsListener){
             clickListener = context
         }
-        dataSource = dataProvider?.dataSource()
     }
 
     override fun onCreateView(
@@ -34,14 +33,22 @@ class FragmentMoviesList : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
-        val rvMovieList = view.findViewById<RecyclerView>(R.id.rv_main_movie_list)
-        scope.launch {
-            movies = getMovies()
-            movieListAdapter = MainMenuMovieListAdapter(movies!!, clickListener)
-            rvMovieList.adapter = movieListAdapter
-            rvMovieList.addItemDecoration(MovieListItemDecorator(requireContext(),12, 12))
+        movieListAdapter = MainMenuMovieListAdapter(movies, clickListener)
+        rvMovieList = view.findViewById<RecyclerView>(R.id.rv_main_movie_list)
+        .apply{
+            adapter = movieListAdapter
+            addItemDecoration(MovieListItemDecorator(requireContext(),12, 12))
         }
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        dataSource = dataProvider?.dataSource()
+        scope.launch {
+            movies = getMovies()
+            updateData(movies)
+        }
     }
 
     override fun onDetach() {
@@ -51,7 +58,11 @@ class FragmentMoviesList : BaseFragment() {
     }
 
     private suspend fun getMovies(): List<Movie> {
-        return dataSource?.getMoviesAsync()!!
+        return dataSource?.getMoviesAsync() ?: emptyList()
+    }
+
+    private suspend fun updateData(movies: List<Movie>?) = withContext(Dispatchers.Main){
+        movies?.let { movieListAdapter?.setData(it) }
     }
 
     interface MovieDetailsListener{
