@@ -7,19 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mycodeflow.ActorListItemDecorator
 import com.mycodeflow.data.Movie
-import com.mycodeflow.datasource.MoviesDataSource
 import com.mycodeflow.moviesadapters.DetailCastListAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.mycodeflow.viewmodels.MovieDetailsViewModel
 
 
-class FragmentMoviesDetails : BaseFragment() {
+class FragmentMoviesDetails : BaseFragment(), Observer<Movie> {
 
     private lateinit var backButton: ImageView
     private lateinit var backDrop: ImageView
@@ -38,8 +36,6 @@ class FragmentMoviesDetails : BaseFragment() {
     private lateinit var rvCastList: RecyclerView
     private var castListAdapter: DetailCastListAdapter? = null
     private var listener: BackToMenuListener? = null
-    private var dataSource: MoviesDataSource? = null
-    private var scope = CoroutineScope(Dispatchers.IO)
 
 
     override fun onAttach(context: Context) {
@@ -59,10 +55,15 @@ class FragmentMoviesDetails : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dataSource = dataProvider?.dataSource()
+        //creating viewModel with factory
+        val movieDetailsFactory = dataProvider?.getFactory()
+        val movieDetailsViewModel = ViewModelProviders.of(this, movieDetailsFactory)
+            .get(MovieDetailsViewModel::class.java)
         //getting movie by id
         val movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
-        getMovieById(movieId)
+        movieDetailsViewModel.getMovieById(movieId)
+        //observe changes in viewModels movie to get it later
+        movieDetailsViewModel.movieExample.observe(this.viewLifecycleOwner, this)
     }
 
     override fun onDetach() {
@@ -91,22 +92,14 @@ class FragmentMoviesDetails : BaseFragment() {
         rvCastList = view.findViewById(R.id.rv_details_cast)
     }
 
-    private fun getMovieById(movieId: Int) {
-        //Dispatchers IO
-        scope.launch {
-            val movie = dataSource?.getMovieByIdAsync(movieId)
-            bindViews(movie)
-        }
-    }
-
-    private suspend fun bindViews(movie: Movie?) = withContext(Dispatchers.Main){
+    override fun onChanged(movie: Movie?) {
         //set background image
         Glide.with(requireView())
             .load(movie?.backdrop)
             .placeholder(R.drawable.movie_details_bg_avengers)
             .into(backDrop)
         //age restriction
-        val ageText = context!!.getString(R.string.movie_minimum_age, movie?.minimumAge)
+        val ageText = getString(R.string.movie_minimum_age, movie?.minimumAge)
         minimumAge.text = ageText
         //title
         title.text = movie?.title
@@ -117,7 +110,7 @@ class FragmentMoviesDetails : BaseFragment() {
         val starsList: List<ImageView> = listOf(firstStar, secondStar, thirdStar, fourthStar, fifthStar)
         setStarIcons(starsList, movie)
         //number of reviews
-        val reviews = context!!.getString(R.string.movie_review_text, movie?.numberOfRatings)
+        val reviews = getString(R.string.movie_review_text, movie?.numberOfRatings)
         numberOfReviews.text = reviews
         //storyline
         storyLineTitle.text = getString(R.string.movie_details_storyline)
@@ -126,20 +119,20 @@ class FragmentMoviesDetails : BaseFragment() {
         if (movie?.actors?.isNotEmpty() == true){
             castTitle.text = getString(R.string.movie_details_cast)
             castListAdapter = DetailCastListAdapter(movie.actors)
-            rvCastList.apply {
-                adapter = castListAdapter
-                addItemDecoration(ActorListItemDecorator(requireContext(), 16))
-            }
+            rvCastList.addItemDecoration(ActorListItemDecorator(requireContext(), 16))
+            rvCastList.adapter = castListAdapter
         }
     }
 
     private fun setStarIcons(stars: List<ImageView>, movie: Movie?) {
-        for (index in stars.indices){
-            if (index <= (movie!!.ratings/2) - 0.5){
-                stars[index].setImageResource(R.drawable.star_icon_on)
-            }
-            else {
-                stars[index].setImageResource(R.drawable.star_icon_off)
+        if (movie!= null) {
+            for (index in stars.indices){
+                if (index <= movie.ratings) {
+                    stars[index].setImageResource(R.drawable.star_icon_on)
+                }
+                else {
+                    stars[index].setImageResource(R.drawable.star_icon_off)
+                }
             }
         }
     }
