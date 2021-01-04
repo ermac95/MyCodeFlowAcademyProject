@@ -8,18 +8,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mycodeflow.MovieListItemDecorator
 import com.mycodeflow.data.Movie
-import com.mycodeflow.datasource.MoviesDataSource
 import com.mycodeflow.moviesadapters.MainMenuMovieListAdapter
-import kotlinx.coroutines.*
+import androidx.lifecycle.ViewModelProviders
+import com.mycodeflow.viewmodels.MovieListViewModel as MovieListViewModel
 
 class FragmentMoviesList : BaseFragment() {
 
     private var clickListener: MovieDetailsListener? = null
-    private var dataSource: MoviesDataSource? = null
-    private var scope = CoroutineScope(Dispatchers.IO)
-    private var movies: List<Movie>? = null
     private var movieListAdapter: MainMenuMovieListAdapter? = null
-    private lateinit var rvMovieList: RecyclerView
+    private var rvMovieList: RecyclerView? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -33,36 +30,38 @@ class FragmentMoviesList : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_movies_list, container, false)
-        movieListAdapter = MainMenuMovieListAdapter(movies, clickListener)
-        rvMovieList = view.findViewById<RecyclerView>(R.id.rv_main_movie_list)
-        .apply{
-            adapter = movieListAdapter
-            addItemDecoration(MovieListItemDecorator(requireContext(),12, 12))
-        }
+        rvMovieList = view.findViewById(R.id.rv_main_movie_list)
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dataSource = dataProvider?.dataSource()
-        scope.launch {
-            movies = getMovies()
-            updateData(movies)
-        }
+        setupMoviesAdapter()
+        //creating viewModel
+        val movieListFactory = dataProvider?.getFactory()
+        val movieListViewModel = ViewModelProviders.of(this, movieListFactory)
+            .get(MovieListViewModel::class.java)
+        //setting data observers
+        movieListViewModel.moviesList.observe(this.viewLifecycleOwner, this::updateData)
     }
 
     override fun onDetach() {
         super.onDetach()
         clickListener = null
-        dataSource = null
+        movieListAdapter = null
+        rvMovieList = null
     }
 
-    private suspend fun getMovies(): List<Movie> {
-        return dataSource?.getMoviesAsync() ?: emptyList()
+    private fun setupMoviesAdapter(){
+        movieListAdapter = MainMenuMovieListAdapter(clickListener)
+        rvMovieList?.apply {
+            adapter = movieListAdapter
+            rvMovieList?.addItemDecoration(MovieListItemDecorator(requireContext(),12, 12))
+        }
     }
 
-    private suspend fun updateData(movies: List<Movie>?) = withContext(Dispatchers.Main){
-        movies?.let { movieListAdapter?.setData(it) }
+    private fun updateData(movies: List<Movie>?) {
+        movieListAdapter?.setData(movies)
     }
 
     interface MovieDetailsListener{

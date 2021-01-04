@@ -12,9 +12,10 @@ import com.mycodeflow.academyproject.R
 import com.mycodeflow.data.Movie
 
 class MainMenuMovieListAdapter(
-    private var movies: List<Movie>?,
     private val clickListener: FragmentMoviesList.MovieDetailsListener?
 ): RecyclerView.Adapter<MovieViewHolder>() {
+
+    private var movies: List<Movie>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         return MovieViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_holder_movie, parent, false))

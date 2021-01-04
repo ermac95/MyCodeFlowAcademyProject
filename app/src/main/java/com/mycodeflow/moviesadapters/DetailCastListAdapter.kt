@@ -11,20 +11,20 @@ import com.mycodeflow.academyproject.R
 import com.mycodeflow.data.Actor
 
 class DetailCastListAdapter(
-    private val actors: List<Actor>
+    private val actors: List<Actor>?
 ): RecyclerView.Adapter<ActorViewHolder>() {
 
-    private fun getItem(position: Int) = actors[position]
+    private fun getItem(position: Int) = actors?.get(position)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActorViewHolder {
         return ActorViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_holder_actor, parent, false))
     }
 
     override fun onBindViewHolder(holder: ActorViewHolder, position: Int) {
-        holder.onBind(getItem(position))
+        getItem(position)?.let { holder.onBind(it) }
     }
 
-    override fun getItemCount(): Int = actors.size
+    override fun getItemCount(): Int = actors?.size ?: 0
 }
 
 class ActorViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
