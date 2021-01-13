@@ -14,7 +14,7 @@
             android:id="@+id/movie_details_bg"
             android:layout_width="match_parent"
             android:layout_height="298dp"
-            android:background="@drawable/movie_details_bg_avengers"
+            tools:background="@drawable/loading_bg"
             android:scaleType="fitXY"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -112,7 +112,7 @@
             android:layout_height="12dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/star_icon_on"
+            tools:src="@drawable/star_icon_on"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_details_tags" />
 
@@ -122,7 +122,7 @@
             android:layout_height="12dp"
             android:layout_marginStart="32.27dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/star_icon_on"
+            tools:src="@drawable/star_icon_on"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_details_tags" />
 
@@ -132,7 +132,7 @@
             android:layout_height="12dp"
             android:layout_marginStart="48.55dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/star_icon_on"
+            tools:src="@drawable/star_icon_on"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_details_tags" />
 
@@ -142,7 +142,7 @@
             android:layout_height="12dp"
             android:layout_marginStart="64.82dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/star_icon_on"
+            tools:src="@drawable/star_icon_on"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_details_tags" />
 
@@ -152,7 +152,7 @@
             android:layout_height="12dp"
             android:layout_marginStart="81.09dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/star_icon_off"
+            tools:src="@drawable/star_icon_off"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/movie_details_tags" />
 
@@ -162,7 +162,7 @@
             android:layout_height="20dp"
             android:layout_marginStart="8.89dp"
             android:layout_marginTop="4dp"
-            android:text="125 REVIEWS"
+            tools:text="125 REVIEWS"
             android:textColor="@color/top_section_text_color"
             android:textSize="14sp"
             android:textStyle="bold"

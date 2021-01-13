@@ -17,7 +17,7 @@
         android:layout_marginTop="0dp"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
-        android:src="@drawable/movie_list_avengers_bg"
+        tools:src="@drawable/movie_list_avengers_bg"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -83,7 +83,7 @@
         android:layout_height="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="18dp"
-        android:src="@drawable/star_icon_on"
+        tools:src="@drawable/star_icon_on"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/movie_item_title" />
 
@@ -93,7 +93,7 @@
         android:layout_height="8dp"
         android:layout_marginStart="2dp"
         android:layout_marginBottom="18dp"
-        android:src="@drawable/star_icon_on"
+        tools:src="@drawable/star_icon_on"
         app:layout_constraintStart_toEndOf="@id/movie_item_first_star"
         app:layout_constraintBottom_toTopOf="@id/movie_item_title" />
 
@@ -103,7 +103,7 @@
         android:layout_height="8dp"
         android:layout_marginStart="2dp"
         android:layout_marginBottom="18dp"
-        android:src="@drawable/star_icon_on"
+        tools:src="@drawable/star_icon_on"
         app:layout_constraintStart_toEndOf="@id/movie_item_second_star"
         app:layout_constraintBottom_toTopOf="@id/movie_item_title" />
 
@@ -113,7 +113,7 @@
         android:layout_height="8dp"
         android:layout_marginStart="2dp"
         android:layout_marginBottom="18dp"
-        android:src="@drawable/star_icon_on"
+        tools:src="@drawable/star_icon_on"
         app:layout_constraintStart_toEndOf="@id/movie_item_third_star"
         app:layout_constraintBottom_toTopOf="@id/movie_item_title" />
 
@@ -123,7 +123,7 @@
         android:layout_height="8dp"
         android:layout_marginStart="2dp"
         android:layout_marginBottom="18dp"
-        android:src="@drawable/star_icon_off"
+        tools:src="@drawable/star_icon_off"
         app:layout_constraintStart_toEndOf="@id/movie_item_fourth_star"
         app:layout_constraintBottom_toTopOf="@+id/movie_item_title" />
 

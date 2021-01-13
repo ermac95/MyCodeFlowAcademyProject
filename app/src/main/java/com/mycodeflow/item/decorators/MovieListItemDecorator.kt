@@ -1,4 +1,4 @@
-package com.mycodeflow
+package com.mycodeflow.item.decorators
 
 import android.content.Context
 import android.graphics.Rect

@@ -33,8 +33,8 @@ class ActorViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
 
     fun onBind(actor: Actor){
         Glide.with(itemView.context)
-            .load(actor.picture)
-            .placeholder(R.drawable.avengers_robert_djr)
+            .load(actor.profilePicture)
+            .placeholder(R.drawable.no_avatar)
             .into(portrait)
         name.text = actor.name
     }
