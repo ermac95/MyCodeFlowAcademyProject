@@ -11,8 +11,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.mycodeflow.ActorListItemDecorator
 import com.mycodeflow.data.Movie
+import com.mycodeflow.item.decorators.ActorListItemDecorator
 import com.mycodeflow.moviesadapters.DetailCastListAdapter
 import com.mycodeflow.viewmodels.MovieDetailsViewModel
 
@@ -61,7 +61,7 @@ class FragmentMoviesDetails : BaseFragment(), Observer<Movie> {
             .get(MovieDetailsViewModel::class.java)
         //getting movie by id
         val movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
-        movieDetailsViewModel.getMovieById(movieId)
+        movieDetailsViewModel.loadMovieById(movieId)
         //observe changes in viewModels movie to get it later
         movieDetailsViewModel.movieExample.observe(this.viewLifecycleOwner, this)
     }
@@ -92,31 +92,31 @@ class FragmentMoviesDetails : BaseFragment(), Observer<Movie> {
         rvCastList = view.findViewById(R.id.rv_details_cast)
     }
 
-    override fun onChanged(movie: Movie?) {
+    override fun onChanged(movie: Movie) {
         //set background image
         Glide.with(requireView())
-            .load(movie?.backdrop)
-            .placeholder(R.drawable.movie_details_bg_avengers)
+            .load(movie.backdrop)
+            .placeholder(R.drawable.loading_bg)
             .into(backDrop)
         //age restriction
-        val ageText = getString(R.string.movie_minimum_age, movie?.minimumAge)
+        val ageText = getString(R.string.movie_minimum_age, movie.minimumAge)
         minimumAge.text = ageText
         //title
-        title.text = movie?.title
+        title.text = movie.title
         //genre tags
-        val genreTags: String? = movie?.genres?.joinToString(separator = ", ") { it.name }
+        val genreTags: String = movie.genres.joinToString(separator = ", ") { it.name }
         genresTags.text = genreTags
         //star icons
         val starsList: List<ImageView> = listOf(firstStar, secondStar, thirdStar, fourthStar, fifthStar)
         setStarIcons(starsList, movie)
         //number of reviews
-        val reviews = getString(R.string.movie_review_text, movie?.numberOfRatings)
+        val reviews = getString(R.string.movie_review_text, movie.numberOfRatings)
         numberOfReviews.text = reviews
         //storyline
         storyLineTitle.text = getString(R.string.movie_details_storyline)
-        storyLine.text = movie?.overview
+        storyLine.text = movie.overview
         //actor cast
-        if (movie?.actors?.isNotEmpty() == true){
+        if (movie.actors?.isNotEmpty() == true){
             castTitle.text = getString(R.string.movie_details_cast)
             castListAdapter = DetailCastListAdapter(movie.actors)
             rvCastList.addItemDecoration(ActorListItemDecorator(requireContext(), 16))

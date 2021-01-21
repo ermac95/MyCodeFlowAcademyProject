@@ -37,7 +37,6 @@ class MainMenuMovieListAdapter(
 }
 
 class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-
     private val bgImage: ImageView = itemView.findViewById(R.id.movie_item_bg_image)
     private val minimumAge: TextView = itemView.findViewById(R.id.movie_item_age_restriction_number)
     private val favorite: ImageView = itemView.findViewById(R.id.movie_item_favorite_indicator)
@@ -53,12 +52,14 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
 
     fun onBind(movie: Movie?){
         //backdrop image
+        val posterUrl: String? = movie?.poster
         Glide.with(itemView.context)
-            .load(movie?.poster)
+            .load(posterUrl)
             .placeholder(R.drawable.movie_list_avengers_bg)
             .into(bgImage)
         //minimum age text
-        val ageText = itemView.context.getString(R.string.movie_minimum_age, movie?.minimumAge)
+        val ageNumber = movie?.minimumAge
+        val ageText = itemView.context.getString(R.string.movie_minimum_age, ageNumber)
         minimumAge.text = ageText
         //favorite indicator
         favorite.setImageResource(R.drawable.movie_favorite_indicator_off)

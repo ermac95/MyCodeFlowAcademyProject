@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mycodeflow.MovieListItemDecorator
-import com.mycodeflow.data.Movie
+import com.mycodeflow.item.decorators.MovieListItemDecorator
 import com.mycodeflow.moviesadapters.MainMenuMovieListAdapter
 import androidx.lifecycle.ViewModelProviders
+import com.mycodeflow.data.Movie
 import com.mycodeflow.viewmodels.MovieListViewModel as MovieListViewModel
 
 class FragmentMoviesList : BaseFragment() {
