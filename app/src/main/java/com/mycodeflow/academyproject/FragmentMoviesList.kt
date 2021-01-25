@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mycodeflow.item.decorators.MovieListItemDecorator
 import com.mycodeflow.moviesadapters.MainMenuMovieListAdapter
 import androidx.lifecycle.ViewModelProviders
-import com.mycodeflow.data.Movie
+import com.mycodeflow.data.MovieListModel
 import com.mycodeflow.viewmodels.MovieListViewModel as MovieListViewModel
 
 class FragmentMoviesList : BaseFragment() {
@@ -60,7 +60,7 @@ class FragmentMoviesList : BaseFragment() {
         }
     }
 
-    private fun updateData(movies: List<Movie>?) {
+    private fun updateData(movies: List<MovieListModel>?) {
         movieListAdapter?.setData(movies)
     }
 
