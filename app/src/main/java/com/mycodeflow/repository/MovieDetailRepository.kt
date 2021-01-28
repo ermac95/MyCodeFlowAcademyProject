@@ -29,8 +29,7 @@ class MovieDetailRepository(
         val baseUrl: String = createImageBaseUrl()
         val cast: List<Actor> = loadCast(movieId, baseUrl)
         val newMovie = loadMovieSelected(movieId)
-        val selectedMovie = composeMovie(baseUrl, cast, newMovie)
-        selectedMovie
+        composeMovie(baseUrl, cast, newMovie)
     }
 
     private suspend fun createImageBaseUrl(): String = withContext(Dispatchers.IO){
