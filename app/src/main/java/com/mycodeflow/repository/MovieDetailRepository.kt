@@ -34,15 +34,13 @@ class MovieDetailRepository(
 
     private suspend fun createImageBaseUrl(): String = withContext(Dispatchers.IO){
         val imageConfig = movieRemoteSource.loadImageConfig()
-        val imageBaseUrl = imageConfig.images.secureBaseURL
-        imageBaseUrl
+        imageConfig.images.secureBaseURL
     }
 
     private suspend fun loadCast(movieId: Int, baseUrl: String): List<Actor> = withContext(Dispatchers.IO){
         val actorsData = movieRemoteSource.loadMovieCast(movieId)
         val actorsList = actorsData.cast
-        val actors = convertWebCastToModel(actorsList, baseUrl)
-        actors
+        convertWebCastToModel(actorsList, baseUrl)
     }
 
     private fun convertWebCastToModel(actorData: List<Cast>, baseUrl: String): List<Actor>{
@@ -50,8 +48,7 @@ class MovieDetailRepository(
     }
 
     private suspend fun loadMovieSelected(movieId: Int) = withContext(Dispatchers.IO){
-        val newMovie = movieRemoteSource.loadMovieById(movieId)
-        newMovie
+        movieRemoteSource.loadMovieById(movieId)
     }
 
     private fun composeMovie(
