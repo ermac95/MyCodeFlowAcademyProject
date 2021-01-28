@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,7 +16,7 @@ import com.mycodeflow.moviesadapters.DetailCastListAdapter
 import com.mycodeflow.viewmodels.MovieDetailsViewModel
 
 
-class FragmentMoviesDetails : BaseFragment(), Observer<MovieDetailModel> {
+class FragmentMoviesDetails : BaseFragment() {
 
     private lateinit var backButton: ImageView
     private lateinit var backDrop: ImageView
@@ -63,7 +62,9 @@ class FragmentMoviesDetails : BaseFragment(), Observer<MovieDetailModel> {
         val movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
         movieDetailsViewModel.updateMovieDetails(movieId)
         //observe changes in viewModels movie to get it later
-        movieDetailsViewModel.movieExample.observe(this.viewLifecycleOwner, this)
+        movieDetailsViewModel.movieExample.observe(this.viewLifecycleOwner){
+            updateDetailsScreen(it)
+        }
     }
 
     override fun onDetach() {
@@ -92,7 +93,7 @@ class FragmentMoviesDetails : BaseFragment(), Observer<MovieDetailModel> {
         rvCastList = view.findViewById(R.id.rv_details_cast)
     }
 
-    override fun onChanged(movie: MovieDetailModel) {
+    private fun updateDetailsScreen(movie: MovieDetailModel) {
         //set background image
         Glide.with(requireView())
             .load(movie.backdrop)
