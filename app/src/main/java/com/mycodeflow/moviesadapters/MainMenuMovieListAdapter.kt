@@ -15,22 +15,22 @@ class MainMenuMovieListAdapter(
     private val clickListener: FragmentMoviesList.MovieDetailsListener?
 ): RecyclerView.Adapter<MovieViewHolder>() {
 
-    private var movies: List<MovieListModel>? = null
+    private var movies: List<MovieListModel> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         return MovieViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_holder_movie, parent, false))
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.onBind(movies?.get(position))
+        holder.onBind(movies[position])
         holder.itemView.setOnClickListener{
-            movies?.get(position)?.id?.let { it1 -> clickListener?.showDetails(it1) }
+            movies[position].id.let { it1 -> clickListener?.showDetails(it1) }
         }
     }
 
-    override fun getItemCount(): Int = movies?.size ?: 0
+    override fun getItemCount(): Int = movies.size
 
-    fun setData(updatedMovies: List<MovieListModel>?){
+    fun setData(updatedMovies: List<MovieListModel>){
         movies = updatedMovies
         notifyDataSetChanged()
     }
