@@ -7,17 +7,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.mycodeflow.data.Movie
+import com.mycodeflow.data.MovieDetailModel
 import com.mycodeflow.item.decorators.ActorListItemDecorator
 import com.mycodeflow.moviesadapters.DetailCastListAdapter
 import com.mycodeflow.viewmodels.MovieDetailsViewModel
 
 
-class FragmentMoviesDetails : BaseFragment(), Observer<Movie> {
+class FragmentMoviesDetails : BaseFragment() {
 
     private lateinit var backButton: ImageView
     private lateinit var backDrop: ImageView
@@ -61,9 +60,11 @@ class FragmentMoviesDetails : BaseFragment(), Observer<Movie> {
             .get(MovieDetailsViewModel::class.java)
         //getting movie by id
         val movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
-        movieDetailsViewModel.loadMovieById(movieId)
+        movieDetailsViewModel.updateMovieDetails(movieId)
         //observe changes in viewModels movie to get it later
-        movieDetailsViewModel.movieExample.observe(this.viewLifecycleOwner, this)
+        movieDetailsViewModel.movieExample.observe(this.viewLifecycleOwner){
+            updateDetailsScreen(it)
+        }
     }
 
     override fun onDetach() {
@@ -92,7 +93,7 @@ class FragmentMoviesDetails : BaseFragment(), Observer<Movie> {
         rvCastList = view.findViewById(R.id.rv_details_cast)
     }
 
-    override fun onChanged(movie: Movie) {
+    private fun updateDetailsScreen(movie: MovieDetailModel) {
         //set background image
         Glide.with(requireView())
             .load(movie.backdrop)
@@ -124,7 +125,7 @@ class FragmentMoviesDetails : BaseFragment(), Observer<Movie> {
         }
     }
 
-    private fun setStarIcons(stars: List<ImageView>, movie: Movie?) {
+    private fun setStarIcons(stars: List<ImageView>, movie: MovieDetailModel?) {
         if (movie!= null) {
             for (index in stars.indices){
                 if (index <= movie.ratings) {

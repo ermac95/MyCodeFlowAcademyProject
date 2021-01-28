@@ -154,13 +154,13 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/movie_item_duration" />
+        app:layout_constraintBottom_toTopOf="@+id/movie_release_date" />
 
     <TextView
-        android:id="@+id/movie_item_duration"
+        android:id="@+id/movie_release_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:text="137 min"
+        tools:text="October 12, 2018"
         android:textSize="8sp"
         android:textColor="@color/movie_time"
         android:textStyle="bold"
