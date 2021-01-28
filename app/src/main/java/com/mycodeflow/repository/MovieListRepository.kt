@@ -34,23 +34,20 @@ class MovieListRepository(
         val baseUrl = createImageBaseUrl()
         val genresData = loadGenresFromWeb()
         val moviesData = loadMoviesOnline()
-        val moviesList = convertWebMoviesToModel(baseUrl, genresData, moviesData)
-        moviesList
+        convertWebMoviesToModel(baseUrl, genresData, moviesData)
     }
 
     //creating base image url for image loading
     private suspend fun createImageBaseUrl(): String = withContext(Dispatchers.IO){
         val imageConfig = movieRemoteSource.loadImageConfig()
-        val imageBaseUrl = imageConfig.images.secureBaseURL
-        imageBaseUrl
+        imageConfig.images.secureBaseURL
     }
 
     //loading genres list from web
     private suspend fun loadGenresFromWeb() = withContext(Dispatchers.IO){
         val genreResponse = movieRemoteSource.loadGenres()
         val genreList = genreResponse.genres
-        val newGenreList = convertWebGenresToModel(genreList)
-        newGenreList
+        convertWebGenresToModel(genreList)
     }
 
     //converter response genres to model genres
@@ -61,8 +58,7 @@ class MovieListRepository(
     //loading movie list from web and converting to model
     private suspend fun loadMoviesOnline(): List<MovieListResponse> = withContext(Dispatchers.IO){
         val moviesData = movieRemoteSource.loadMovies()
-        val moviesListData = moviesData.results
-        moviesListData
+        moviesData.results
     }
 
     private fun convertWebMoviesToModel(
