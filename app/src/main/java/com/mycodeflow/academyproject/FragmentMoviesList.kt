@@ -60,7 +60,7 @@ class FragmentMoviesList : BaseFragment() {
         }
     }
 
-    private fun updateData(movies: List<MovieListModel>?) {
+    private fun updateData(movies: List<MovieListModel>) {
         movieListAdapter?.setData(movies)
     }
 
