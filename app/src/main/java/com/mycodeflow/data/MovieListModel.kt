@@ -3,7 +3,7 @@ package com.mycodeflow.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.mycodeflow.MovieTypeConverter
+import com.mycodeflow.converters.MovieTypeConverter
 
 @Entity
 data class MovieListModel(

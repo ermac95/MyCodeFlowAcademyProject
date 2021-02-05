@@ -10,6 +10,8 @@ import com.mycodeflow.item.decorators.MovieListItemDecorator
 import com.mycodeflow.moviesadapters.MainMenuMovieListAdapter
 import androidx.lifecycle.ViewModelProviders
 import com.mycodeflow.data.MovieListModel
+import com.mycodeflow.work.CacheUpdateWorkManager
+import kotlinx.coroutines.launch
 import com.mycodeflow.viewmodels.MovieListViewModel as MovieListViewModel
 
 class FragmentMoviesList : BaseFragment() {
@@ -23,6 +25,8 @@ class FragmentMoviesList : BaseFragment() {
         if (context is MovieDetailsListener){
             clickListener = context
         }
+        //starting periodic background cache update work with WorkManager
+        startBgCacheUpdate(context)
     }
 
     override fun onCreateView(
@@ -52,6 +56,11 @@ class FragmentMoviesList : BaseFragment() {
         rvMovieList = null
     }
 
+    private fun startBgCacheUpdate(context: Context){
+        val worker = CacheUpdateWorkManager(context)
+        worker.startBackgroundWork()
+    }
+
     private fun setupMoviesAdapter(){
         movieListAdapter = MainMenuMovieListAdapter(clickListener)
         rvMovieList?.apply {
@@ -60,7 +69,7 @@ class FragmentMoviesList : BaseFragment() {
         }
     }
 
-    private fun updateData(movies: List<MovieListModel>?) {
+    private fun updateData(movies: List<MovieListModel>) {
         movieListAdapter?.setData(movies)
     }
 
