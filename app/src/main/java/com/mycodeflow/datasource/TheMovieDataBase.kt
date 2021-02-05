@@ -2,7 +2,7 @@ package com.mycodeflow.datasource
 
 import android.content.Context
 import androidx.room.*
-import com.mycodeflow.MovieTypeConverter
+import com.mycodeflow.converters.MovieTypeConverter
 import com.mycodeflow.data.MovieDetailModel
 import com.mycodeflow.data.MovieListModel
 

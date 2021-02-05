@@ -1,4 +1,4 @@
-package com.mycodeflow
+package com.mycodeflow.converters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson
