@@ -17,7 +17,7 @@
         android:layout_marginTop="0dp"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
-        tools:src="@drawable/movie_list_avengers_bg"
+        tools:src = "@drawable/loading_poster"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 

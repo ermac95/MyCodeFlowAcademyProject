@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mycodeflow.academyproject.FragmentMoviesList
 import com.mycodeflow.academyproject.R
-import com.mycodeflow.data.MovieListModel
+import com.mycodeflow.data.MovieListItem
 
 class MainMenuMovieListAdapter(
     private val clickListener: FragmentMoviesList.MovieDetailsListener?
 ): RecyclerView.Adapter<MovieViewHolder>() {
 
-    private var movies: List<MovieListModel> = emptyList()
+    private var movies: List<MovieListItem> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         return MovieViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.view_holder_movie, parent, false))
@@ -30,7 +30,7 @@ class MainMenuMovieListAdapter(
 
     override fun getItemCount(): Int = movies.size
 
-    fun setData(updatedMovies: List<MovieListModel>){
+    fun setData(updatedMovies: List<MovieListItem>){
         movies = updatedMovies
         notifyDataSetChanged()
     }
@@ -50,12 +50,12 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val mainTitle: TextView = itemView.findViewById(R.id.movie_item_title)
     private val releaseDate: TextView = itemView.findViewById(R.id.movie_release_date)
 
-    fun onBind(movie: MovieListModel?){
+    fun onBind(movie: MovieListItem?){
         //backdrop image
         val posterUrl: String? = movie?.poster
         Glide.with(itemView.context)
             .load(posterUrl)
-            .placeholder(R.drawable.movie_list_avengers_bg)
+            .placeholder(R.drawable.loading_poster)
             .into(bgImage)
         //minimum age text
         val ageNumber = movie?.minimumAge
@@ -80,7 +80,7 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         releaseDate.text = movie?.release
     }
 
-    private fun setStarIcons(stars: List<ImageView>, movie: MovieListModel){
+    private fun setStarIcons(stars: List<ImageView>, movie: MovieListItem){
         for (index in stars.indices){
             if (index <= (movie.ratings/2) - 0.5){
                 stars[index].setImageResource(R.drawable.star_icon_on)

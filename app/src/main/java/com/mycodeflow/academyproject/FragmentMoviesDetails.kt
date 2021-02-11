@@ -7,16 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProviders
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mycodeflow.data.MovieDetailModel
 import com.mycodeflow.item.decorators.ActorListItemDecorator
 import com.mycodeflow.moviesadapters.DetailCastListAdapter
 import com.mycodeflow.viewmodels.MovieDetailsViewModel
+import javax.inject.Inject
 
 
-class FragmentMoviesDetails : BaseFragment() {
+class FragmentMoviesDetails : Fragment() {
+
+    @Inject lateinit var movieDetailsViewModel: MovieDetailsViewModel
 
     private lateinit var backButton: ImageView
     private lateinit var backDrop: ImageView
@@ -39,6 +42,7 @@ class FragmentMoviesDetails : BaseFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        (requireActivity().application as MyApp).appComponent.inject(this)
         if (context is BackToMenuListener){
             listener = context
         }
@@ -54,16 +58,11 @@ class FragmentMoviesDetails : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //creating viewModel with factory
-        val movieDetailsFactory = dataProvider?.getFactory()
-        val movieDetailsViewModel = ViewModelProviders.of(this, movieDetailsFactory)
-            .get(MovieDetailsViewModel::class.java)
-        //getting movie by id
         val movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
         movieDetailsViewModel.updateMovieDetails(movieId)
         //observe changes in viewModels movie to get it later
         movieDetailsViewModel.movieExample.observe(this.viewLifecycleOwner){
-            updateDetailsScreen(it)
+           updateDetailsScreen(it)
         }
     }
 
