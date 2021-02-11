@@ -21,7 +21,7 @@ class ActorListItemDecorator(
         with(outRect) {
             when(parent.getChildAdapterPosition(view)){
                 0 -> {
-                    left = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, margin.toFloat(), metrics).toInt()
+                    left = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (margin - 8).toFloat(), metrics).toInt()
                     right = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (margin - 8).toFloat(), metrics).toInt()
                 }
                 1, 2 -> {

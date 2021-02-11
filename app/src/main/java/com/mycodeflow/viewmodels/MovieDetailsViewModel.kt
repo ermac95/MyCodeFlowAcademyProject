@@ -7,9 +7,11 @@ import androidx.lifecycle.viewModelScope
 import com.mycodeflow.data.*
 import com.mycodeflow.repository.MovieDetailRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class MovieDetailsViewModel(private val movieDetailRepository: MovieDetailRepository) : ViewModel() {
+class MovieDetailsViewModel @Inject constructor(
+        val movieDetailRepository: MovieDetailRepository
+) : ViewModel() {
     private var mutableMovie = MutableLiveData<MovieDetailModel>()
     val movieExample: LiveData<MovieDetailModel> get() = mutableMovie
 

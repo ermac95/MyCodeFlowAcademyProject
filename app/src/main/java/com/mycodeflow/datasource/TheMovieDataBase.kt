@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.*
 import com.mycodeflow.converters.MovieTypeConverter
 import com.mycodeflow.data.MovieDetailModel
-import com.mycodeflow.data.MovieListModel
+import com.mycodeflow.data.MovieListItem
 
-@Database(entities = [MovieListModel::class, MovieDetailModel::class], version = 1)
+@Database(entities = [MovieListItem::class, MovieDetailModel::class], version = 1)
 @TypeConverters(MovieTypeConverter::class)
 abstract class TheMovieDataBase: RoomDatabase() {
 

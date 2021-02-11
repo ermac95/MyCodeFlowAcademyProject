@@ -7,11 +7,14 @@ import androidx.lifecycle.viewModelScope
 import com.mycodeflow.data.*
 import com.mycodeflow.repository.MovieListRepository
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MovieListViewModel(private val movieListRepository: MovieListRepository): ViewModel() {
+class MovieListViewModel @Inject constructor(
+    val movieListRepository: MovieListRepository
+    ): ViewModel() {
 
-    private val mutableMoviesList = MutableLiveData<List<MovieListModel>>(emptyList())
-    val moviesList: LiveData<List<MovieListModel>> get() = mutableMoviesList
+    private val mutableMoviesList = MutableLiveData<List<MovieListItem>>(emptyList())
+    val moviesList: LiveData<List<MovieListItem>> get() = mutableMoviesList
 
     init{
         updateMovieData()

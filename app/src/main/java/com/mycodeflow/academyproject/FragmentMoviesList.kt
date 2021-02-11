@@ -2,19 +2,23 @@ package com.mycodeflow.academyproject
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.mycodeflow.item.decorators.MovieListItemDecorator
 import com.mycodeflow.moviesadapters.MainMenuMovieListAdapter
-import androidx.lifecycle.ViewModelProviders
-import com.mycodeflow.data.MovieListModel
+import com.mycodeflow.data.MovieListItem
 import com.mycodeflow.work.CacheUpdateWorkManager
-import kotlinx.coroutines.launch
+import javax.inject.Inject
 import com.mycodeflow.viewmodels.MovieListViewModel as MovieListViewModel
 
-class FragmentMoviesList : BaseFragment() {
+class FragmentMoviesList : Fragment() {
+
+    @Inject lateinit var movieListViewModel: MovieListViewModel
+    @Inject lateinit var workManager: CacheUpdateWorkManager
 
     private var clickListener: MovieDetailsListener? = null
     private var movieListAdapter: MainMenuMovieListAdapter? = null
@@ -22,10 +26,11 @@ class FragmentMoviesList : BaseFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        (requireActivity().application as MyApp).appComponent.inject(this)
+        Log.d("myLogs", "fragment started")
         if (context is MovieDetailsListener){
             clickListener = context
         }
-        //starting periodic background cache update work with WorkManager
         startBgCacheUpdate(context)
     }
 
@@ -41,11 +46,6 @@ class FragmentMoviesList : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupMoviesAdapter()
-        //creating viewModel
-        val movieListFactory = dataProvider?.getFactory()
-        val movieListViewModel = ViewModelProviders.of(this, movieListFactory)
-            .get(MovieListViewModel::class.java)
-        //setting data observers
         movieListViewModel.moviesList.observe(this.viewLifecycleOwner, this::updateData)
     }
 
@@ -57,8 +57,7 @@ class FragmentMoviesList : BaseFragment() {
     }
 
     private fun startBgCacheUpdate(context: Context){
-        val worker = CacheUpdateWorkManager(context)
-        worker.startBackgroundWork()
+        workManager.startBackgroundWork()
     }
 
     private fun setupMoviesAdapter(){
@@ -69,8 +68,9 @@ class FragmentMoviesList : BaseFragment() {
         }
     }
 
-    private fun updateData(movies: List<MovieListModel>) {
+    private fun updateData(movies: List<MovieListItem>) {
         movieListAdapter?.setData(movies)
+        Log.d("myLogs", "movieList = $movies")
     }
 
     interface MovieDetailsListener{

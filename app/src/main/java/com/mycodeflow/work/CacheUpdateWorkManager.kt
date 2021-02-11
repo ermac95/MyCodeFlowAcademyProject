@@ -3,8 +3,9 @@ package com.mycodeflow.work
 import android.content.Context
 import androidx.work.*
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
-class CacheUpdateWorkManager(private val context: Context) {
+class CacheUpdateWorkManager @Inject constructor(private val context: Context) {
 
     fun startBackgroundWork(){
         val workConstraints = setConstraints() //setting work start constrains

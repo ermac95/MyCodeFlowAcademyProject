@@ -1,14 +1,15 @@
 package com.mycodeflow.repository
 
+import com.mycodeflow.api.TheMovieDBService
 import com.mycodeflow.data.*
-import com.mycodeflow.datasource.MovieInteractor
 import com.mycodeflow.datasource.TheMovieDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MovieDetailRepository(
-    private val movieRemoteSource: MovieInteractor,
-    private val movieLocalSource: TheMovieDao
+class MovieDetailRepository @Inject constructor(
+    val movieRemoteSource: TheMovieDBService,
+    val movieLocalSource: TheMovieDao
 ) {
     suspend fun getMovieById(movieId: Int): MovieDetailModel{
         val movie = getMovieFromDb(movieId)
@@ -33,7 +34,7 @@ class MovieDetailRepository(
     }
 
     private suspend fun createImageBaseUrl(): String = withContext(Dispatchers.IO){
-        val imageConfig = movieRemoteSource.loadImageConfig()
+        val imageConfig = movieRemoteSource.loadBaseImageConfig()
         imageConfig.images.secureBaseURL
     }
 

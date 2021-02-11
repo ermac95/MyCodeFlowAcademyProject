@@ -2,11 +2,9 @@ package com.mycodeflow.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.mycodeflow.converters.MovieTypeConverter
 
 @Entity
-data class MovieListModel(
+data class MovieListItem(
         @PrimaryKey
         val id: Int,
         val title: String,
@@ -15,7 +13,6 @@ data class MovieListModel(
         val ratings: Double,
         val numberOfRatings: Int,
         val minimumAge: Int,
-        @TypeConverters(MovieTypeConverter::class)
         val genres: List<Genre>,
         val release: String
 )

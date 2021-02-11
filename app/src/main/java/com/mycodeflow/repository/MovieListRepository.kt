@@ -1,18 +1,18 @@
 package com.mycodeflow.repository
 
-
+import com.mycodeflow.api.TheMovieDBService
 import com.mycodeflow.data.*
-import com.mycodeflow.datasource.MovieInteractor
 import com.mycodeflow.datasource.TheMovieDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MovieListRepository(
-    private val movieRemoteSource: MovieInteractor,
-    private val movieLocalSource: TheMovieDao
+class MovieListRepository @Inject constructor(
+    val movieRemoteSource: TheMovieDBService,
+    val movieLocalSource: TheMovieDao
 ){
     //response for viewModels movie list request
-    suspend fun getMovies(forceRefresh: Boolean): List<MovieListModel>{
+    suspend fun getMovies(forceRefresh: Boolean): List<MovieListItem>{
         val data = getMoviesFromDb()
         return if (!forceRefresh && data.isNotEmpty()){
             data
@@ -24,12 +24,12 @@ class MovieListRepository(
     }
 
     //taking movie data from local cache
-    private suspend fun getMoviesFromDb(): List<MovieListModel> = withContext(Dispatchers.IO){
+    private suspend fun getMoviesFromDb(): List<MovieListItem> = withContext(Dispatchers.IO){
         movieLocalSource.getAllMoviesList()
     }
 
     //loading movies from web and updating cache
-    private suspend fun getMoviesFromWeb(): List<MovieListModel> = withContext(Dispatchers.IO){
+    private suspend fun getMoviesFromWeb(): List<MovieListItem> = withContext(Dispatchers.IO){
         //making movie model
         val baseUrl = createImageBaseUrl()
         val genresData = loadGenresFromWeb()
@@ -39,13 +39,13 @@ class MovieListRepository(
 
     //creating base image url for image loading
     private suspend fun createImageBaseUrl(): String = withContext(Dispatchers.IO){
-        val imageConfig = movieRemoteSource.loadImageConfig()
+        val imageConfig = movieRemoteSource.loadBaseImageConfig()
         imageConfig.images.secureBaseURL
     }
 
     //loading genres list from web
     private suspend fun loadGenresFromWeb() = withContext(Dispatchers.IO){
-        val genreResponse = movieRemoteSource.loadGenres()
+        val genreResponse = movieRemoteSource.loadGenreList()
         val genreList = genreResponse.genres
         convertWebGenresToModel(genreList)
     }
@@ -57,7 +57,7 @@ class MovieListRepository(
 
     //loading movie list from web and converting to model
     private suspend fun loadMoviesOnline(): List<MovieListResponse> = withContext(Dispatchers.IO){
-        val moviesData = movieRemoteSource.loadMovies()
+        val moviesData = movieRemoteSource.loadMoviesList()
         moviesData.results
     }
 
@@ -65,10 +65,10 @@ class MovieListRepository(
         baseUrl: String,
         genres: List<Genre>,
         moviesData: List<MovieListResponse>,
-    ): List<MovieListModel>{
+    ): List<MovieListItem>{
         val genresMap = genres.associateBy { it.id }
         return moviesData.map { MovieResponse ->
-            (MovieListModel(
+            (MovieListItem(
                 id = MovieResponse.id.toInt(),
                 title = MovieResponse.originalTitle,
                 overview = MovieResponse.overview,

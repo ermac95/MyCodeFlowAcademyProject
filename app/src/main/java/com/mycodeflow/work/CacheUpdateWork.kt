@@ -4,8 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.mycodeflow.api.TheMovieDBClient
-import com.mycodeflow.datasource.MovieInteractor
+import com.mycodeflow.api.TheMovieDBService
 import com.mycodeflow.datasource.TheMovieDataBase
 import com.mycodeflow.repository.MovieListRepository
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +22,7 @@ class CacheUpdateWork(
     override fun doWork(): Result {
         Log.d("myLogs", "update work started")
         val localDataSource = TheMovieDataBase.getInstance(context = applicationContext).getMovieDao()
-        val remoteDataSource = MovieInteractor(TheMovieDBClient.getClient())
+        val remoteDataSource = TheMovieDBService.createService()
         val movieListRepository = MovieListRepository(remoteDataSource, localDataSource)
         try{
             coroutineScope.launch {
