@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mycodeflow.item.decorators.MovieListItemDecorator
 import com.mycodeflow.moviesadapters.MainMenuMovieListAdapter
 import com.mycodeflow.data.MovieListItem
+import com.mycodeflow.work.CacheUpdateWorkManager
 import javax.inject.Inject
 import com.mycodeflow.viewmodels.MovieListViewModel as MovieListViewModel
 
 class FragmentMoviesList : Fragment() {
 
     @Inject lateinit var movieListViewModel: MovieListViewModel
+    @Inject lateinit var workManager: CacheUpdateWorkManager
 
     private var clickListener: MovieDetailsListener? = null
     private var movieListAdapter: MainMenuMovieListAdapter? = null
@@ -29,6 +31,7 @@ class FragmentMoviesList : Fragment() {
         if (context is MovieDetailsListener){
             clickListener = context
         }
+        startBgCacheUpdate(context)
     }
 
     override fun onCreateView(
@@ -51,6 +54,10 @@ class FragmentMoviesList : Fragment() {
         clickListener = null
         movieListAdapter = null
         rvMovieList = null
+    }
+
+    private fun startBgCacheUpdate(context: Context){
+        workManager.startBackgroundWork()
     }
 
     private fun setupMoviesAdapter(){
