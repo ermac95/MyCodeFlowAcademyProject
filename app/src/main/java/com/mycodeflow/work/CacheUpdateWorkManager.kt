@@ -28,6 +28,10 @@ class CacheUpdateWorkManager @Inject constructor(private val context: Context) {
     }
 
     /*
+    private fun getOneTimeWorkRequest(): OneTimeWorkRequest {
+        return OneTimeWorkRequest.from(NewMovieNotificationWork::class.java)
+    }
+
     private suspend fun checkOneTimeState(){
 
         val workInfos = WorkManager.getInstance(applicationContext).getWorkInfosByTag("my_unique_work").await()

@@ -1,12 +1,10 @@
-package com.mycodeflow.academyproject
+package com.mycodeflow.ui
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationManagerCompat
+
 
 class MainActivity : AppCompatActivity(), FragmentMoviesDetails.BackToMenuListener, FragmentMoviesList.MovieDetailsListener {
 
@@ -15,9 +13,29 @@ class MainActivity : AppCompatActivity(), FragmentMoviesDetails.BackToMenuListen
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null){
             supportFragmentManager.beginTransaction()
-                    .add(R.id.main_frame_container, FragmentMoviesList.newInstance())
+                    .replace(R.id.main_frame_container, FragmentMoviesList.newInstance())
                     .addToBackStack(FragmentMoviesList.toString())
                     .commit()
+            intent?.let(::handleIncomingIntent)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent != null){
+            handleIncomingIntent(intent)
+        }
+    }
+
+    private fun handleIncomingIntent(intent: Intent){
+        when(intent.action){
+            Intent.ACTION_VIEW -> {
+                val id = intent.data?.lastPathSegment?.toIntOrNull()
+                if (id != null) {
+                    showDetails(id)
+                    NotificationManagerCompat.from(this).cancelAll()
+                }
+            }
         }
     }
 

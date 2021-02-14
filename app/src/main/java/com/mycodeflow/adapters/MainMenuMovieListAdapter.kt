@@ -1,4 +1,4 @@
-package com.mycodeflow.moviesadapters
+package com.mycodeflow.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,8 +7,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.mycodeflow.academyproject.FragmentMoviesList
-import com.mycodeflow.academyproject.R
+import com.mycodeflow.ui.FragmentMoviesList
+import com.mycodeflow.ui.R
 import com.mycodeflow.data.MovieListItem
 
 class MainMenuMovieListAdapter(

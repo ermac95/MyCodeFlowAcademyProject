@@ -7,4 +7,6 @@
     <string name="imageDescription">shotImage</string>
     <string name="movie_details_storyline">Storyline</string>
     <string name="movie_details_cast">Cast</string>
+    <string name="channel_name">new_movie</string>
+    <string name="channel_description_text">A channel to notify user about a brand new movie appeared in his movies list</string>
 </resources>
