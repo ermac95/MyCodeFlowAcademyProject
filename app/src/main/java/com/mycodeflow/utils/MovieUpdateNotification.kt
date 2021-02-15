@@ -52,7 +52,7 @@ class MovieUpdateNotification(val context: Context, val movie: MovieListItem) {
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("A new movie found")
+                .setContentTitle(context.getString(R.string.new_movie_notif_title))
                 .setContentText("${movie.title} is available for watching. Enjoy!")
                 .setSmallIcon(R.drawable.star_icon_on)
                 .setLargeIcon(largeNotificationIcon)
