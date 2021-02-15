@@ -62,7 +62,7 @@ class MovieUpdateNotification(val context: Context, val movie: MovieListItem) {
 
     companion object {
         const val CHANNEL_ID = "movie_update_channel"
-        const val NOTIFICATION_ID = 1
+        const val NOTIFICATION_ID = 953671
         const val NOTIFICATION_TAG = "new_movie_tag"
         const val IMPORTANCE_DEFAULT = NotificationManagerCompat.IMPORTANCE_DEFAULT
     }
