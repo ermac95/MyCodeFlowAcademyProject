@@ -40,7 +40,7 @@ class CacheUpdateWork(
                     }
                 }
             }
-        } catch (e: HttpException){
+        } catch (e: IOException){
             return Result.retry()
         }
         return Result.success()
