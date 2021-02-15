@@ -31,7 +31,7 @@ class MovieUpdateNotification(val context: Context, val movie: MovieListItem) {
         val openDetailIntent = Intent(context, MainActivity::class.java)
                 .setAction(Intent.ACTION_VIEW)
                 .setData(contentUri)
-        PendingIntent.getActivity(context, 1, openDetailIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        PendingIntent.getActivity(context, 7773568, openDetailIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     fun sendNotification(){
@@ -52,7 +52,7 @@ class MovieUpdateNotification(val context: Context, val movie: MovieListItem) {
 
     private fun createNotification(): Notification {
         return NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("A new movie found")
+                .setContentTitle(context.getString(R.string.new_movie_notif_title))
                 .setContentText("${movie.title} is available for watching. Enjoy!")
                 .setSmallIcon(R.drawable.star_icon_on)
                 .setLargeIcon(largeNotificationIcon)
@@ -62,7 +62,7 @@ class MovieUpdateNotification(val context: Context, val movie: MovieListItem) {
 
     companion object {
         const val CHANNEL_ID = "movie_update_channel"
-        const val NOTIFICATION_ID = 1
+        const val NOTIFICATION_ID = 953671
         const val NOTIFICATION_TAG = "new_movie_tag"
         const val IMPORTANCE_DEFAULT = NotificationManagerCompat.IMPORTANCE_DEFAULT
     }

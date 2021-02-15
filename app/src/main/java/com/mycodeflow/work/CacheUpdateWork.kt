@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.io.IOException
 
 class CacheUpdateWork(
     appContext: Context,
@@ -22,6 +23,11 @@ class CacheUpdateWork(
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
     override fun doWork(): Result {
+
+        if (runAttemptCount > 3){
+            return Result.failure()
+        }
+
         Log.d("myLogs", "update work started")
         val localDataSource = TheMovieDataBase.getInstance(context = applicationContext).getMovieDao()
         val remoteDataSource = TheMovieDBService.createService()
@@ -40,7 +46,7 @@ class CacheUpdateWork(
                     }
                 }
             }
-        } catch (e: HttpException){
+        } catch (e: IOException){
             return Result.retry()
         }
         return Result.success()

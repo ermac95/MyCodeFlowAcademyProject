@@ -9,4 +9,5 @@
     <string name="movie_details_cast">Cast</string>
     <string name="channel_name">new_movie</string>
     <string name="channel_description_text">A channel to notify user about a brand new movie appeared in his movies list</string>
+    <string name="new_movie_notif_title">A new movie found</string>
 </resources>
