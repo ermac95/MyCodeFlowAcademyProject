@@ -23,31 +23,29 @@ class CacheUpdateWork(
     private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
     override fun doWork(): Result {
-
+        //if work fails to complete on the fourth time, it returns failure
         if (runAttemptCount > 3){
             return Result.failure()
         }
-
-        Log.d("myLogs", "update work started")
         val localDataSource = TheMovieDataBase.getInstance(context = applicationContext).getMovieDao()
         val remoteDataSource = TheMovieDBService.createService()
         val movieListRepository = MovieListRepository(remoteDataSource, localDataSource)
-        try{
-            coroutineScope.launch {
-                val oldMoviesList = localDataSource.getAllMoviesList()
+        coroutineScope.launch {
+            val oldMoviesList = localDataSource.getAllMoviesList()
+            try {
                 movieListRepository.getMovies(true)
-                val newMoviesList = localDataSource.getAllMoviesList()
-                if (oldMoviesList.isNotEmpty()) {
-                    val newMovie = checkNewMovieItem(oldMoviesList, newMoviesList)
-                    //checking if there is a new movie downloaded in comparison to previous data base if any
-                    if (newMovie != null){
-                        val notificationLauncher = MovieUpdateNotification(applicationContext, newMovie)
-                        notificationLauncher.sendNotification()
-                    }
+            } catch (e: IOException){
+                Result.retry()
+            }
+            val newMoviesList = localDataSource.getAllMoviesList()
+            if (oldMoviesList.isNotEmpty()) {
+                val newMovie = checkNewMovieItem(oldMoviesList, newMoviesList)
+                //checking if there is a new movie downloaded in comparison to previous data base if any
+                if (newMovie != null){
+                    val notificationLauncher = MovieUpdateNotification(applicationContext, newMovie)
+                    notificationLauncher.sendNotification()
                 }
             }
-        } catch (e: IOException){
-            return Result.retry()
         }
         return Result.success()
     }
@@ -58,7 +56,6 @@ class CacheUpdateWork(
                 movieItem.id == it.id
             }
         }
-        Log.d("myLogs", "NewMovieList is $distinctMoviesList")
         return if (distinctMoviesList.isNotEmpty()){
             distinctMoviesList[0]
         } else {
