@@ -1,4 +1,4 @@
-package com.mycodeflow.academyproject
+package com.mycodeflow.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mycodeflow.data.MovieDetailModel
 import com.mycodeflow.item.decorators.ActorListItemDecorator
-import com.mycodeflow.moviesadapters.DetailCastListAdapter
+import com.mycodeflow.adapters.DetailCastListAdapter
 import com.mycodeflow.viewmodels.MovieDetailsViewModel
 import javax.inject.Inject
 

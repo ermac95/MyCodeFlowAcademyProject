@@ -67,8 +67,6 @@ enum class Department(val value: String) {
     Writing("Writing");
 }
 
-
-
 //image config data classes
 data class ImageConfigResponse (
     val images: ImageConfig,

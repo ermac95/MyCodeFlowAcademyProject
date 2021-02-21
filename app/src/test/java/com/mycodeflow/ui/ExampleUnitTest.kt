@@ -1,4 +1,4 @@
-package com.mycodeflow.academyproject
+package com.mycodeflow.ui
 
 import org.junit.Test
 

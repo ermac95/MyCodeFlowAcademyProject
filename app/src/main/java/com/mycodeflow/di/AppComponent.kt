@@ -1,8 +1,8 @@
 package com.mycodeflow.di
 
 import android.content.Context
-import com.mycodeflow.academyproject.FragmentMoviesDetails
-import com.mycodeflow.academyproject.FragmentMoviesList
+import com.mycodeflow.ui.FragmentMoviesDetails
+import com.mycodeflow.ui.FragmentMoviesList
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton

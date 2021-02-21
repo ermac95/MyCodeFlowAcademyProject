@@ -1,8 +1,10 @@
 package com.mycodeflow.repository
 
+import android.util.Log
 import com.mycodeflow.api.TheMovieDBService
 import com.mycodeflow.data.*
 import com.mycodeflow.datasource.TheMovieDao
+import com.mycodeflow.utils.MovieUpdateNotification
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -13,10 +15,12 @@ class MovieListRepository @Inject constructor(
 ){
     //response for viewModels movie list request
     suspend fun getMovies(forceRefresh: Boolean): List<MovieListItem>{
+        //trying to get moviesList from Apps DataBase
         val data = getMoviesFromDb()
         return if (!forceRefresh && data.isNotEmpty()){
             data
         } else {
+            //getting moviesList from Web
             val movies = getMoviesFromWeb()
             movieLocalSource.insertAllMovies(movies)
             return movies

@@ -11,7 +11,11 @@ class CacheUpdateWorkManager @Inject constructor(private val context: Context) {
         val workConstraints = setConstraints() //setting work start constrains
         val cacheUpdateRequest = getPeriodicWorkRequest(workConstraints) //creating periodic work
         WorkManager.getInstance(context)
-            .enqueueUniquePeriodicWork(CacheUpdateWork.CACHE_UPDATE_WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, cacheUpdateRequest) //starting unique periodic work
+            .enqueueUniquePeriodicWork(
+                    CacheUpdateWork.CACHE_UPDATE_WORK_NAME,
+                    ExistingPeriodicWorkPolicy.KEEP,
+                    cacheUpdateRequest
+            ) //starting unique periodic work
     }
 
     private fun setConstraints(): Constraints {
@@ -20,14 +24,17 @@ class CacheUpdateWorkManager @Inject constructor(private val context: Context) {
     }
 
     private fun getPeriodicWorkRequest(workConstraints: Constraints): PeriodicWorkRequest {
-        return PeriodicWorkRequestBuilder<CacheUpdateWork>(
-            8,
-            TimeUnit.HOURS)
-            .setConstraints(workConstraints)
-            .build()
+        return PeriodicWorkRequestBuilder<CacheUpdateWork>(8, TimeUnit.HOURS)
+                .setConstraints(workConstraints)
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 1, TimeUnit.HOURS )
+                .build()
     }
 
     /*
+    private fun getOneTimeWorkRequest(): OneTimeWorkRequest {
+        return OneTimeWorkRequest.from(NewMovieNotificationWork::class.java)
+    }
+
     private suspend fun checkOneTimeState(){
 
         val workInfos = WorkManager.getInstance(applicationContext).getWorkInfosByTag("my_unique_work").await()

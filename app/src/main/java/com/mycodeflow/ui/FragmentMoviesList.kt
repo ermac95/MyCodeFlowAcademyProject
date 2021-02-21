@@ -1,4 +1,4 @@
-package com.mycodeflow.academyproject
+package com.mycodeflow.ui
 
 import android.content.Context
 import android.os.Bundle
@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.mycodeflow.item.decorators.MovieListItemDecorator
-import com.mycodeflow.moviesadapters.MainMenuMovieListAdapter
+import com.mycodeflow.adapters.MainMenuMovieListAdapter
 import com.mycodeflow.data.MovieListItem
 import com.mycodeflow.work.CacheUpdateWorkManager
 import javax.inject.Inject
@@ -27,7 +27,6 @@ class FragmentMoviesList : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         (requireActivity().application as MyApp).appComponent.inject(this)
-        Log.d("myLogs", "fragment started")
         if (context is MovieDetailsListener){
             clickListener = context
         }
@@ -70,7 +69,6 @@ class FragmentMoviesList : Fragment() {
 
     private fun updateData(movies: List<MovieListItem>) {
         movieListAdapter?.setData(movies)
-        Log.d("myLogs", "movieList = $movies")
     }
 
     interface MovieDetailsListener{

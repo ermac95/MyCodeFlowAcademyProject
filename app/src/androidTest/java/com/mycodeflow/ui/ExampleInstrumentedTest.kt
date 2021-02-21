@@ -1,4 +1,4 @@
-package com.mycodeflow.academyproject
+package com.mycodeflow.ui
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
