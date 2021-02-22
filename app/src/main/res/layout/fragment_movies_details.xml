@@ -6,8 +6,11 @@
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/movie_details_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:transitionName="@string/movie_details_transition_name"
+        android:transitionGroup="true"
         android:background="@color/details_bg_color">
 
         <ImageView

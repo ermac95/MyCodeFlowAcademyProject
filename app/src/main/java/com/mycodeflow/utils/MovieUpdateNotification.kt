@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -31,7 +30,7 @@ class MovieUpdateNotification(val context: Context, val movie: MovieListItem) {
         val openDetailIntent = Intent(context, MainActivity::class.java)
                 .setAction(Intent.ACTION_VIEW)
                 .setData(contentUri)
-        PendingIntent.getActivity(context, 7773568, openDetailIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        PendingIntent.getActivity(context, REQUEST_CODE, openDetailIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     fun sendNotification(){
@@ -61,6 +60,7 @@ class MovieUpdateNotification(val context: Context, val movie: MovieListItem) {
     }
 
     companion object {
+        const val REQUEST_CODE = 7773568
         const val CHANNEL_ID = "movie_update_channel"
         const val NOTIFICATION_ID = 953671
         const val NOTIFICATION_TAG = "new_movie_tag"

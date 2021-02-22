@@ -2,15 +2,15 @@ package com.mycodeflow.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.transition.MaterialElevationScale
 import com.mycodeflow.item.decorators.MovieListItemDecorator
 import com.mycodeflow.adapters.MainMenuMovieListAdapter
-import com.mycodeflow.data.MovieListItem
 import com.mycodeflow.work.CacheUpdateWorkManager
 import javax.inject.Inject
 import com.mycodeflow.viewmodels.MovieListViewModel as MovieListViewModel
@@ -30,7 +30,7 @@ class FragmentMoviesList : Fragment() {
         if (context is MovieDetailsListener){
             clickListener = context
         }
-        startBgCacheUpdate(context)
+        startBgCacheUpdate()
     }
 
     override fun onCreateView(
@@ -44,8 +44,26 @@ class FragmentMoviesList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //postponing transition until all data is loaded
+        postponeEnterTransition()
         setupMoviesAdapter()
-        movieListViewModel.moviesList.observe(this.viewLifecycleOwner, this::updateData)
+        movieListViewModel.moviesList.observe(this.viewLifecycleOwner) {
+            movieListAdapter?.setData(it)
+            //start transition since all the views have been measured and laid out
+            (view.parent as? ViewGroup)?.doOnPreDraw {
+                startPostponedEnterTransition()
+            }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        exitTransition = MaterialElevationScale(false).apply {
+            duration = resources.getInteger(R.integer.fragments_transition_duration).toLong()
+        }
+        reenterTransition = MaterialElevationScale(true).apply {
+            duration = resources.getInteger(R.integer.fragments_transition_duration).toLong()
+        }
     }
 
     override fun onDetach() {
@@ -55,7 +73,7 @@ class FragmentMoviesList : Fragment() {
         rvMovieList = null
     }
 
-    private fun startBgCacheUpdate(context: Context){
+    private fun startBgCacheUpdate(){
         workManager.startBackgroundWork()
     }
 
@@ -67,12 +85,8 @@ class FragmentMoviesList : Fragment() {
         }
     }
 
-    private fun updateData(movies: List<MovieListItem>) {
-        movieListAdapter?.setData(movies)
-    }
-
     interface MovieDetailsListener{
-        fun showDetails(movieId: Int)
+        fun showTransitionDetails(movieId: Int, view: View)
     }
 
     companion object {

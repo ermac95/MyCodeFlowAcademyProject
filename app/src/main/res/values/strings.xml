@@ -10,4 +10,6 @@
     <string name="channel_name">new_movie</string>
     <string name="channel_description_text">A channel to notify user about a brand new movie appeared in his movies list</string>
     <string name="new_movie_notif_title">A new movie found</string>
+    <string name="movie_item_transition_name">Transition from movie item to details</string>
+    <string name="movie_details_transition_name">Transition details destination</string>
 </resources>

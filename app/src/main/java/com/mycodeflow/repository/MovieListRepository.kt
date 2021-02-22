@@ -1,10 +1,8 @@
 package com.mycodeflow.repository
 
-import android.util.Log
 import com.mycodeflow.api.TheMovieDBService
 import com.mycodeflow.data.*
 import com.mycodeflow.datasource.TheMovieDao
-import com.mycodeflow.utils.MovieUpdateNotification
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject

@@ -24,7 +24,7 @@ class CacheUpdateWork(
 
     override fun doWork(): Result {
         //if work fails to complete on the fourth time, it returns failure
-        if (runAttemptCount > 3){
+        if (runAttemptCount > NUMBER_OF_ALLOWED_ATTEMPTS){
             return Result.failure()
         }
         val localDataSource = TheMovieDataBase.getInstance(context = applicationContext).getMovieDao()
@@ -65,5 +65,6 @@ class CacheUpdateWork(
 
     companion object {
         const val CACHE_UPDATE_WORK_NAME = "background_cache_update_work"
+        const val NUMBER_OF_ALLOWED_ATTEMPTS = 3
     }   
 }
