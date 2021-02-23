@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mycodeflow.ui.FragmentMoviesList
@@ -24,7 +25,7 @@ class MainMenuMovieListAdapter(
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.onBind(movies[position])
         holder.itemView.setOnClickListener{
-            movies[position].id.let { it1 -> clickListener?.showDetails(it1) }
+            movies[position].id.let { it1 -> clickListener?.showTransitionDetails(it1, it) }
         }
     }
 
@@ -51,6 +52,8 @@ class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
     private val releaseDate: TextView = itemView.findViewById(R.id.movie_release_date)
 
     fun onBind(movie: MovieListItem?){
+        //setting transition name
+        ViewCompat.setTransitionName(itemView, movie?.title)
         //backdrop image
         val posterUrl: String? = movie?.poster
         Glide.with(itemView.context)

@@ -2,9 +2,11 @@ package com.mycodeflow.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
-
+import androidx.fragment.app.commit
 
 class MainActivity : AppCompatActivity(), FragmentMoviesDetails.BackToMenuListener, FragmentMoviesList.MovieDetailsListener {
 
@@ -39,11 +41,21 @@ class MainActivity : AppCompatActivity(), FragmentMoviesDetails.BackToMenuListen
         }
     }
 
-    override fun showDetails(movieId: Int) {
+    private fun showDetails(movieId: Int){
         supportFragmentManager.beginTransaction()
                 .add(R.id.main_frame_container, FragmentMoviesDetails.newInstance(movieId))
                 .addToBackStack(FragmentMoviesDetails.toString())
                 .commit()
+    }
+
+    override fun showTransitionDetails(movieId: Int, view: View) {
+        Log.d("myLogs", "This is transition with views")
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            addSharedElement(view, resources.getString(R.string.movie_details_transition_name))
+            replace(R.id.main_frame_container, FragmentMoviesDetails.newInstance(movieId))
+            addToBackStack(null)
+        }
     }
 
     override fun backToMainMenu() {

@@ -1,6 +1,8 @@
 package com.mycodeflow.ui
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +12,15 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.google.android.material.transition.MaterialContainerTransform
+import com.mycodeflow.adapters.DetailCastListAdapter
 import com.mycodeflow.data.MovieDetailModel
 import com.mycodeflow.item.decorators.ActorListItemDecorator
-import com.mycodeflow.adapters.DetailCastListAdapter
+import com.mycodeflow.utils.themeColor
 import com.mycodeflow.viewmodels.MovieDetailsViewModel
 import javax.inject.Inject
 
@@ -39,6 +47,10 @@ class FragmentMoviesDetails : Fragment() {
     private var castListAdapter: DetailCastListAdapter? = null
     private var listener: BackToMenuListener? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = getTransitionSettings()
+    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -48,8 +60,10 @@ class FragmentMoviesDetails : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         //inflating main view and setup views
         val view = inflater.inflate(R.layout.fragment_movies_details, container, false)
         setupViews(view)
@@ -58,6 +72,7 @@ class FragmentMoviesDetails : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //postponeEnterTransition()
         val movieId = arguments?.getInt(KEY_MOVIE_ID, 0) ?: 1
         movieDetailsViewModel.updateMovieDetails(movieId)
         //observe changes in viewModels movie to get it later
@@ -73,9 +88,6 @@ class FragmentMoviesDetails : Fragment() {
     }
 
     private fun setupViews(view: View){
-        backButton = view.findViewById<ImageView>(R.id.movie_details_back_button).apply {
-            setOnClickListener{listener?.backToMainMenu()}
-        }
         backDrop = view.findViewById(R.id.movie_details_bg)
         minimumAge = view.findViewById(R.id.movie_details_age_text)
         title = view.findViewById(R.id.movie_details_title)
@@ -90,13 +102,37 @@ class FragmentMoviesDetails : Fragment() {
         storyLineTitle = view.findViewById(R.id.storyline_title)
         castTitle = view.findViewById(R.id.cast_title)
         rvCastList = view.findViewById(R.id.rv_details_cast)
+        backButton = view.findViewById<ImageView>(R.id.movie_details_back_button).apply {
+            setOnClickListener{listener?.backToMainMenu()}
+        }
     }
 
     private fun updateDetailsScreen(movie: MovieDetailModel) {
         //set background image
         Glide.with(requireView())
             .load(movie.backdrop)
-            .placeholder(R.drawable.loading_bg)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+                    return false
+                }
+            })
             .into(backDrop)
         //age restriction
         val ageText = getString(R.string.movie_minimum_age, movie.minimumAge)
@@ -107,7 +143,13 @@ class FragmentMoviesDetails : Fragment() {
         val genreTags: String = movie.genres.joinToString(separator = ", ") { it.name }
         genresTags.text = genreTags
         //star icons
-        val starsList: List<ImageView> = listOf(firstStar, secondStar, thirdStar, fourthStar, fifthStar)
+        val starsList: List<ImageView> = listOf(
+            firstStar,
+            secondStar,
+            thirdStar,
+            fourthStar,
+            fifthStar
+        )
         setStarIcons(starsList, movie)
         //number of reviews
         val reviews = getString(R.string.movie_review_text, movie.numberOfRatings)
@@ -137,12 +179,22 @@ class FragmentMoviesDetails : Fragment() {
         }
     }
 
+    private fun getTransitionSettings(): MaterialContainerTransform {
+        return MaterialContainerTransform().apply {
+            drawingViewId = R.id.main_frame_container
+            duration = resources.getInteger(R.integer.fragments_transition_duration).toLong()
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+        }
+    }
+
     interface BackToMenuListener{
         fun backToMainMenu()
     }
 
     companion object {
-        private const val KEY_MOVIE_ID = "myMovieId"
+        private const val KEY_MOVIE_ID = "my_movie_id"
+
         fun newInstance(movieId: Int): FragmentMoviesDetails{
             return FragmentMoviesDetails().apply {
                 arguments = Bundle().apply {
